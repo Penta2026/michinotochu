@@ -1,0 +1,6 @@
+道の途中。 PWA migration candidate
+App: 1.5.43
+DB: 2.8.23
+Source: user-supplied local version 1.5.42-dev4
+Built: 2026-11-19
+Notes: unchanged application features; PWA cache/version and release metadata updated.

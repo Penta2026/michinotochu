@@ -1,0 +1,5 @@
+PWA Version: 1.5.43
+DB Version: 2.8.23
+Source: Local Web 1.5.42-dev4 (2026-11-12)
+Release: PWA migration candidate 2026-11-19; not yet verified on GitHub Pages or devices
+Locations: 1234 road stations; 3763 other spots
