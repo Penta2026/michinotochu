@@ -62,24 +62,18 @@ function numericValue(e,t,n,r){const o=$(t);if(o&&""!==String(o.value).trim()){c
   const userCount=Number($("sugCount").value);
   const requestedCount=userCount||1+Math.floor(6*Math.random());
   const stations=D.roads.filter(s=>active(s.gacha)&&Number.isFinite(Number(s.lat))&&Number.isFinite(Number(s.lng)));
-  const estimated=$("sugDistanceMode")?.value==="estimated";
   let budget=null;
-  if(estimated){
+  {
     const engine=window.SugorokuLandUI?.engine;
     const fail=message=>{$("sugResult").classList.remove("empty");$("sugResult").innerHTML="<p>"+esc(message)+"</p>";};
     if(!engine){fail("推定用の陸地データを読み込んでください。");return;}
     if(!engine.land(origin)){fail("出発地の陸地を判定できません。陸地内の地点を指定してください。");return;}
-    try{budget=window.BudgetSugoroku.plan(origin,stations,maxDistance,requestedCount,engine,window.SugorokuRoute,{vehicle:$("sugVehicle").value,sea:$("sugSea").value});}
+    try{budget=window.BudgetSugoroku.plan(origin,stations,maxDistance,requestedCount,engine,window.SugorokuRoute,{vehicle:$("sugVehicle").value,sea:"conditional"});}
     catch(e){fail("推定距離の計算に失敗しました："+String(e.message||e));return;}
     if(!budget){fail("距離内の確認済み接続を使える候補がありません。未登録の海越え経路も除外されています。");return;}
   }
-  const goal=estimated?budget.goal:window.SugorokuRoute.pickGoal(origin,stations,maxDistance);
-  if(!goal){
-    $("sugResult").classList.remove("empty");
-    $("sugResult").innerHTML="<p>指定した直線距離内にゴール候補の道の駅がありません。距離を広げてください。</p>";
-    return;
-  }
-  const selection=estimated?{points:budget.points,directKm:window.SugorokuRoute.haversine(origin,goal)}:window.SugorokuRoute.plan(origin,goal,stations,requestedCount);
+  const goal=budget.goal;
+  const selection={points:budget.points,directKm:window.SugorokuRoute.haversine(origin,goal)};
   const points=selection.points;
   const mission=$("sugMission").checked?rand(MISSIONS):"ミッションなし";
   const limitNote=points.length<requestedCount?
@@ -88,14 +82,14 @@ function numericValue(e,t,n,r){const o=$(t);if(o&&""!==String(o.value).trim()){c
   const routeLines=points.map((station,index)=>{
     const section=dist(previous.lat,previous.lng,station.lat,station.lng);
     previous=station;
-    return `<div class="route-line"><b>${index+1}. ${esc(station.name)}</b><div class="meta">${esc(station.prefecture)} ${esc(station.municipality||"")} / 区間直線距離 約${section.toFixed(1)}km${estimated?` / 推定 約${budget.estimate.sections[index].km.toFixed(1)}km`:""}</div></div>`;
+    return `<div class="route-line"><b>${index+1}. ${esc(station.name)}</b><div class="meta">${esc(station.prefecture)} ${esc(station.municipality||"")} / 区間直線距離 約${section.toFixed(1)}km${` / 推定 約${budget.estimate.sections[index].km.toFixed(1)}km`}</div></div>`;
   }).join("");
   $("sugResult").classList.remove("empty");
   $("sugResult").innerHTML=`<div class="goal"><small>GOAL</small><br><b>${esc(goal.name)}</b></div>
     <div class="meta">スタートからゴールまでの直線距離：約${selection.directKm.toFixed(1)}km / 選出 ${points.length}駅（ゴール込み）</div>
-    <div class="mission">${esc(mission)}</div>${estimated?`<div class="meta"><b>全区間の推定走行距離：約${budget.km.toFixed(1)}km / 上限 ${maxDistance}km</b></div>`:""}${limitNote}
+    <div class="mission">${esc(mission)}</div><div class="meta"><b>全区間の推定走行距離：約${budget.km.toFixed(1)}km / 上限 ${maxDistance}km</b></div>${limitNote}
     <div>${routeLines}</div>
-    <div class="note">${estimated?"※ 推定値は道路距離を保証しません。未登録の渡海接続は除外し、実際の道路距離はB_Naviで確認してください。":"※ ゴール方向±45°以内で、前進する道の駅を抽選。各区間の直線距離合計はゴールまでの直線距離の1.3倍以内です。道路上の走行距離はナビ側で確認してください。"}</div>
+    <div class="note">※ 推定値です。通行可能な登録済みの橋を経由し、指定距離内なら海越えも対象になります。実際の道路距離はB_Naviで確認してください。</div>
     <div class="actions">${routeResultButtons(origin,points)}
       <button class="soft" onclick='saveFavorite(${JSON.stringify({mode:"道の駅すごろく",title:goal.name,startLabel:origin.label,origin:origin,points:points.map(s=>({name:s.name,lat:s.lat,lng:s.lng,latRaw:s.latRaw||String(s.lat),lngRaw:s.lngRaw||String(s.lng),kind:"道の駅",prefecture:s.prefecture,featureCategory:"road_station",navMode:"name",navQuery:s.navQuery||navSearchQuery(s)})),routeSummary:points.map((s,i)=>`${i+1}. ${s.name}`).join(" → ")}).replaceAll("'","&#39;")})'>お気に入りに保存</button>
       <button class="soft" onclick="resetResult('sug')">結果をリセット</button>
