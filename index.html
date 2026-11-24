@@ -86,11 +86,11 @@
 
 <section id="dest" class="view"><div class="screen-card menu-dest">
   <div class="screen-title-card"><h2>📍  行先ガチャ</h2><button class="screen-close" onclick="showView('home')">×</button></div>
-  <div class="screen-body"><div id="destStart"></div>
-    <div class="choice-section"><h3>📏 目的地までの目安直線距離</h3><select id="destDist" class="logic-control"><option>10</option><option>20</option><option selected>30</option><option>50</option><option>80</option><option>100</option><option>150</option><option>200</option><option>300</option></select><div class="choice-grid" data-target="destDist" data-values="10,20,30,50,80,100,150,200,300"></div><div class="free-number"><input id="destDistFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
+  <div class="screen-body"><div id="destStart"></div><div class="choice-section"><h3>🏍️ 排気量</h3><label><select id="destVehicle"><option value="50">50cc</option><option value="125" selected>51～125cc</option><option value="126">126cc以上</option></select></label><div id="destLandStatus" class="meta" aria-live="polite"></div></div>
+    <div class="choice-section"><h3>📏 目的地までの目安走行距離</h3><select id="destDist" class="logic-control"><option>10</option><option>20</option><option selected>30</option><option>50</option><option>80</option><option>100</option><option>150</option><option>200</option><option>300</option></select><div class="choice-grid" data-target="destDist" data-values="10,20,30,50,80,100,150,200,300"></div><div class="free-number"><input id="destDistFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>↔ 距離の許容幅（±）</h3><select id="destTol" class="logic-control"><option>5</option><option selected>10</option><option>20</option><option>30</option></select><div class="choice-grid" data-target="destTol" data-values="5,10,20,30"></div><div class="free-number"><input id="destTolFree" type="number" min="1" max="500" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>✨ 雰囲気</h3><select id="destMood" class="logic-control"><option>なんでも</option><option>海</option><option>山</option><option>田舎</option><option>市街地</option><option>ランドマーク</option><option>ライダーズカフェ</option></select><div class="choice-grid" data-target="destMood" data-values="なんでも,海,山,田舎,市街地,ランドマーク,ライダーズカフェ" data-labels="✨ なんでも,🌊 海,⛰ 山,🌾 田舎,🏙 市街地,📍 ランドマーク,🏍️ ライダーズカフェ"></div></div>
-    <div class="note">※ 距離は地図上の直線距離です。実際の走行距離は道路状況やルートにより増減します。</div><button class="primary action-main" onclick="runDestination()">🎲 行先ガチャ！</button>
+    <div class="note">※ 指定距離±許容幅を推定走行距離で判定します。未登録の橋・トンネルやフェリーを使う候補は除外します。実際の道路距離はナビで確認してください。</div><button class="primary action-main" onclick="runDestination()">🎲 行先ガチャ！</button>
     <div id="destResult" class="result empty">条件を設定してください。</div>
   </div></div></section>
 
@@ -287,7 +287,7 @@
 <script src="assets/home/home_sprite_2.js?v=1"></script>
 <script src="assets/home/home_sprite_3.js?v=1"></script>
 <script src="gpx-export.js?v=1"></script>
-<script src="land-lookup.js"></script><script src="land-distance.js"></script><script src="budget-sugoroku.js"></script><script src="sugoroku-land-ui.js"></script><script src="sugoroku-route.js?v=1"></script>
+<script src="land-lookup.js"></script><script src="land-distance.js"></script><script src="budget-sugoroku.js"></script><script src="sugoroku-land-ui.js"></script><script src="distance-gacha.js"></script><script src="sugoroku-route.js?v=1"></script>
 <script src="app.js?v=2"></script>
 <script src="detour-enhancements.js?v=1"></script>
 <script src="pwa.js?v=2"></script>
