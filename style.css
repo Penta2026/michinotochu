@@ -603,7 +603,7 @@ body.pwa-starting .shell,body.pwa-starting .topbar,body.pwa-starting footer{poin
 /* GPX連携 UI・第1段階 (2026-11-11) */
 .route-buttons.route-result-buttons{display:grid;grid-template-columns:1fr;gap:9px;width:100%;}
 .route-result-buttons > .map-check,.route-result-buttons > .detour-open{grid-column:1/-1;width:100%;box-sizing:border-box;}
-.route-export-actions,.detour-submit-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;width:100%;align-items:stretch;}
+.route-export-actions,.detour-submit-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%;align-items:stretch;}
 .route-export-actions > *,.detour-submit-actions > *{min-width:0;width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.5;white-space:normal;}
 .route-export-actions > .route-gpx,.detour-submit-actions > #detourSaveGpx{border:1px solid #c5d8df;background:#edf5f6;color:#24445a;}
 .detour-route-final .detour-submit-actions .action-main{width:100%;}
@@ -658,3 +658,5 @@ body.pwa-starting .shell,body.pwa-starting .topbar,body.pwa-starting footer{poin
 }
 .detour-custom-map-search .detour-custom-search-action:focus-visible,
 .detour-topic-select:focus-visible {outline:3px solid #e5b85b;outline-offset:2px;}
+
+.route-export-actions > .route-bnavi,.detour-submit-actions > .route-bnavi{background:#326bc1;color:#fff;border:1px solid #285ba7;}
