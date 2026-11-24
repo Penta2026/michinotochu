@@ -12,7 +12,7 @@ permissions:
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -28,6 +28,10 @@ jobs:
           gh run download "$run" --name japan-land-candidate --dir candidate
       - name: Generate runtime data
         run: python tools/build-land-runtime.py candidate data/land-runtime --connections data/land-connections-shimanami.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verified-land-runtime
+          path: data/land-runtime/
       - name: Store runtime data on development branch
         if: github.ref == 'refs/heads/land-engine-stage2'
         run: |
@@ -35,4 +39,10 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add data/land-runtime
           git diff --cached --quiet || git commit -m 'Generate verified runtime land tiles'
+          git fetch origin land-engine-stage2
+          if ! git diff --quiet HEAD origin/land-engine-stage2 -- tools/build-land-runtime.py data/land-connections-shimanami.json .github/workflows/prepare-land-runtime.yml; then
+            echo 'Generation inputs changed; refusing stale publication'
+            exit 1
+          fi
+          git rebase origin/land-engine-stage2
           git push origin HEAD:land-engine-stage2
