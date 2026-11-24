@@ -72,3 +72,6 @@ mainとの差分確認時59コミット先行、遅れ0、288ファイル。PWA/
 
 ## 工程8.4〜8.6 公開候補
 8.3はユーザーからグリーン報告。共通LandDistance、SugorokuLandUI、DistanceGacha.band/withinを4機能で利用。PWA3、DB2（地理DB未変更）、キャッシュ更新、ホーム旧バージョン表記修正。Ver2からの更新・お気に入り保持・4機能の総合回帰試験を1 workflowに集約。main/B_Naviは試験合格まで維持。全国橋補完は別工程。
+
+## 工程8.5 合格・8.6 本番反映対象
+2026-11-24 Actions run 45347935336 / job 138286932987、試験済みSHA 9b3a37ddf49a1537c8b73f07144afb65511933fc、6 passed (18.1s)。4機能、SWオフライン、Ver2→Ver3お気に入り保持合格。旧main 43d4ef2cc745bf3e2348180ecc8addb5d49d10da を復旧基準とする。PWA3/DB2、B_Navi変更なし。全国橋補完・距離精度検証・工程9は残る。配信確認は別途。https://github.com/Penta2026/michinotochu/actions/runs/45347935336
