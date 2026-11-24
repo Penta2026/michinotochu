@@ -15,12 +15,21 @@
       ],
       "publishedKm": 0.3865,
       "source": "https://www.pref.hiroshima.lg.jp/uploaded/life/1099333_9545228_misc.pdf",
-      "status": "pending-endpoint-verification",
+      "status": "registered-runtime",
       "distanceScope": "structure-only",
       "travelMode": "ride",
-      "a": null,
-      "b": null,
-      "km": null
+      "a": {
+        "lat": 34.4107454,
+        "lng": 133.2178242,
+        "landId": "JP-HONSHU"
+      },
+      "b": {
+        "lat": 34.4079301,
+        "lng": 133.2153351,
+        "landId": "JP-MUKAISHIMA"
+      },
+      "km": 0.388,
+      "evidence": "OSM way 90964667; Actions run 45340313330 artifact 14894739988"
     },
     {
       "id": "shimanami-e76",
