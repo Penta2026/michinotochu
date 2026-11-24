@@ -63,3 +63,6 @@ mainとの差分確認時59コミット先行、遅れ0、288ファイル。PWA/
 
 ## 工程8.1 行先ガチャ
 本番Ver2 SHA 43d4ef2cc745bf3e2348180ecc8addb5d49d10da から distance-stage8 を作成。distance-gacha.js 共通距離帯抽出、行先ガチャ3車種、既存テーマ・許容幅・GPX・保存維持。独立カフェDB等の未収録座標は必要タイルを追加読込し厳密陸地判定。境界70/90km含む・帯外・未接続島除外の合成試験成功、構文検査済み。全実データ試験はツール時間切れ。Chromium回帰 workflow Stage 8.1 destination regression を追加、結果未確認。main/B_Navi未変更。次は8.2今日の走り方、8.3季節を走る。全国橋補完も残る。
+
+## 工程8.1 合格・8.2 実装
+8.1 Actions run 45346364361 / job 138281782599 success、3 passed (8.3s) をログ確認。8.2 今日の走り方は現行の単一目的地抽選、距離帯・気分・サブジャンル・方角±30°を維持し、共通DistanceGacha.bandと車種別陸地接続に移行。Google Maps外部検索は従来の地理的中心で道路距離・通行可否未確認を明記。GPX・保存維持。非同期競合対策、構文検査済み。Stage 8.2 ride style regression を追加、実行結果未確認。main/B_Navi未変更。次は8.3季節を走る。
