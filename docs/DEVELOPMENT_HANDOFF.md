@@ -41,3 +41,10 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 ## 工程7.5 ブラウザ試験環境の修正
 - run 45341752070 / job 138266793948 は失敗。ubuntu-latest が Ubuntu 26.04.1 を選択し、Playwright 1.56.1 の Chromium 依存関係インストールが非対応。アプリのブラウザ試験は開始されていない。
 - stage75-browser.yml の runner を ubuntu-24.04 に固定。修正コミット 79f3cf8fe8ec071d9a3d78a01350250eb1315955。新規push起動のrunを確認すること（旧runの再実行では旧設定が使われる）。main/B_Navi未変更。実ブラウザ試験結果は未確定。
+
+
+## 工程7.5 Chromium回帰試験 成功（2026-11-24）
+- GitHub Actions run 45341989439 / job 138267574666、Ubuntu 24.04、conclusion success。ログで sugoroku browser regression (2.0s) と service worker and cached regional data (1.2s)、2 passed (5.5s) を確認。
+- 実ブラウザで80km以内の抽選、最大6駅、GPXダウンロードと地点数・マーカー、B_Navi用クリップボードのGPX一致、お気に入り保存・再読み込み保持、寄り道画面遷移、結果リセット、SW起動・広島タイルキャッシュ・オフライン再抽選に合格。
+- 7.5のChromium自動試験は合格。B_Navi実機での受信・ルーティング、他端末、旧版からのSW更新、全国橋接続補完と全国距離検証は未完了。main/B_Naviは変更しない。7.6公開前に残課題を確認する。
+- 実行URL: https://github.com/Penta2026/michinotochu/actions/runs/45341989439
