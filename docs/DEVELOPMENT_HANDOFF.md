@@ -1,5 +1,5 @@
 # 道の途中。推定走行距離 開発引継ぎ
-更新: 2026-11-24 / 工程7.3（進行中）
+更新: 2026-11-24 / 工程7.6（公開準備）
 ## 正本と公開方針
 - 本番 main: 7468c1d66e403d648fdd347f4f3e6de7f4d6e03a（今回の開発開始時点）。開発: land-engine-stage2。公開前に main の現状と差分を再確認。
 - B_Navi (Penta2026/b_navi) は mixed-v3 安定版を維持。本件では変更しない。
@@ -48,3 +48,6 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 - 実ブラウザで80km以内の抽選、最大6駅、GPXダウンロードと地点数・マーカー、B_Navi用クリップボードのGPX一致、お気に入り保存・再読み込み保持、寄り道画面遷移、結果リセット、SW起動・広島タイルキャッシュ・オフライン再抽選に合格。
 - 7.5のChromium自動試験は合格。B_Navi実機での受信・ルーティング、他端末、旧版からのSW更新、全国橋接続補完と全国距離検証は未完了。main/B_Naviは変更しない。7.6公開前に残課題を確認する。
 - 実行URL: https://github.com/Penta2026/michinotochu/actions/runs/45341989439
+
+## 工程7.6 公開準備
+mainとの差分確認時59コミット先行、遅れ0、288ファイル。PWA/DB表示2、SWキャッシュ2、更新時のworker有効化待ち、旧保存キー維持、未登録接続除外の注記、OSM attributionとODbL README、更新履歴候補を追加。新規 Stage 7.6 release upgrade gate で旧mainを同一originに配信し保存→v2差替→SW更新→保存保持→抽選を試験、7.5も再実行する。結果未確認。全国主要橋・全国検証・B_Navi実機受信は未完了。mainは更新せず公開ゲート確認後に判断。
