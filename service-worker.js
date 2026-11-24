@@ -2,7 +2,7 @@
 "use strict";
 const VERSION = "2";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
-const CACHE_NAME = CACHE_PREFIX + VERSION + "-stage82-dev";
+const CACHE_NAME = CACHE_PREFIX + VERSION + "-stage83-dev";
 const CORE_FILES = [
   "./index.html", "./style.css", "./app.js", "./detour-enhancements.js",
   "./pwa.js", "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
