@@ -2,9 +2,9 @@
 (function(root){"use strict";
 const state={engine:null};root.SugorokuLandUI=state;
 document.addEventListener("DOMContentLoaded",()=>{
- const mode=document.getElementById("sugDistanceMode"),opts=document.getElementById("sugEstimateOptions"),file=document.getElementById("sugLandFile"),status=document.getElementById("sugLandStatus");
- if(!mode||!opts||!file||!status)return;
- mode.addEventListener("change",()=>{opts.hidden=mode.value!=="estimated";});
+ const file=document.getElementById("sugLandFile"),status=document.getElementById("sugLandStatus");
+ if(!file||!status)return;
+
  let generation=0;
  file.addEventListener("change",async()=>{
   const gen=++generation;state.engine=null;const f=file.files[0];if(!f){status.textContent="陸地データ未読み込み";return;}
