@@ -1,0 +1,29 @@
+name: Inspect Onomichi R317 connection
+on:
+  workflow_dispatch:
+  push:
+    branches: [land-engine-stage2]
+    paths:
+      - '.github/workflows/inspect-onomichi.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install 'shapely>=2.0,<3'
+      - name: Download local road geometry
+        run: curl --fail --location --retry 2 --max-time 90 -A 'michinotochu-land-connection-review/1.0' 'https://api.openstreetmap.org/api/0.6/map?bbox=133.210,34.405,133.222,34.413' -o onomichi.osm
+      - name: Extract and validate candidate endpoints
+        run: python tools/inspect-onomichi.py onomichi.osm data/land-runtime onomichi-candidates.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onomichi-road-evidence
+          path: |
+            onomichi.osm
+            onomichi-candidates.json
