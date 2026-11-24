@@ -23,3 +23,7 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 - 尾道大橋は国道317号の一般道路で、県の道路資料で本州～向島接続を確認。https://www.pref.hiroshima.lg.jp/uploaded/attachment/520579.pdf 。直接OSM API取得はDNSエラー。道路端点・区間長は未確定。
 - tools/inspect-onomichi.py と .github/workflows/inspect-onomichi.yml を追加。OSM APIの小範囲XMLからR317橋候補、道路ノード列、端点の実陸地照合、距離・タグ・way IDを出力。候補のみ、通行制限・一方通行・道路連続性を人または追加検証で確定するまで有効化禁止。Actions起動・成功未確認。成果物 onomichi-road-evidence を確認すること。
 - 次: 尾道大橋候補の確認・正式接続登録、瀬戸大橋/明石・鳴門/関門/江田島/安芸灘/126ccしまなみの接続補完。未確認接続は除外。main/B_Navi未変更。
+
+## 工程7.3 追加確認
+- inspect-onomichi の起動コミット 90b3ba5f6ab8b54847aaafd5d120b2e0a9cc7dfb。利用可能な commit workflow 検索はPR起動のみ対象で、今回のpush起動結果は取得不能。run ID があれば成果物・ジョブログ取得可能。実行成功・候補生成未確認。再実行不要、既存runを確認する。
+- 次回: Actions の Inspect Onomichi R317 connection の run URL から run ID を取得し、onomichi-road-evidence の候補を確認。正式登録は道路連続性・方向・車種制限・同一ポリゴンスナップショットの照合後。地域データの再取得不要。main/B_Navi未変更。
