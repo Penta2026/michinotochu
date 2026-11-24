@@ -1,6 +1,12 @@
 name: Build land polygon candidate
 on:
   workflow_dispatch:
+  push:
+    branches: [land-engine-stage2]
+    paths:
+      - '.github/workflows/build-land-candidate.yml'
+      - 'tools/build-japan-land.py'
+      - 'data/land-anchors.json'
 jobs:
   build:
     runs-on: ubuntu-latest
