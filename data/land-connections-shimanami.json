@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "sourceBlob": "9feaa40663ef5c564ecd347b3f14d329320f38fe",
+  "polygonSnapshot": "japan-land-candidate.zip / 2026-11-24",
+  "attribution": "© OpenStreetMap contributors, ODbL; B_Navi reference geometry",
+  "connections": [
+    {
+      "id": "shimanami-moped-1",
+      "name": "因島大橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.3607588,
+        "lng": 133.1928645,
+        "landId": "OSM-SNAPSHOT-4baf19a766695d915e97bbe5"
+      },
+      "b": {
+        "lat": 34.3540571,
+        "lng": 133.171549,
+        "landId": "OSM-SNAPSHOT-8cef03800275b60a672f8572"
+      },
+      "km": 3.014,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    },
+    {
+      "id": "shimanami-moped-2",
+      "name": "生口橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.3038434,
+        "lng": 133.1536838,
+        "landId": "OSM-SNAPSHOT-8cef03800275b60a672f8572"
+      },
+      "b": {
+        "lat": 34.305503,
+        "lng": 133.1464227,
+        "landId": "OSM-SNAPSHOT-2f8662b25c60ff1ff2762220"
+      },
+      "km": 3.224,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    },
+    {
+      "id": "shimanami-moped-3",
+      "name": "多々羅大橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.2656722,
+        "lng": 133.0681592,
+        "landId": "OSM-SNAPSHOT-2f8662b25c60ff1ff2762220"
+      },
+      "b": {
+        "lat": 34.2574011,
+        "lng": 133.055588,
+        "landId": "OSM-SNAPSHOT-cc435a4c03031effd17afcfa"
+      },
+      "km": 3.51,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    },
+    {
+      "id": "shimanami-moped-4",
+      "name": "大三島橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.2174164,
+        "lng": 133.0525663,
+        "landId": "OSM-SNAPSHOT-cc435a4c03031effd17afcfa"
+      },
+      "b": {
+        "lat": 34.2135823,
+        "lng": 133.058072,
+        "landId": "OSM-SNAPSHOT-4f5a65f057ff9c0421f5c9bc"
+      },
+      "km": 0.931,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    },
+    {
+      "id": "shimanami-moped-5",
+      "name": "伯方・大島大橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.1989912,
+        "lng": 133.0774513,
+        "landId": "OSM-SNAPSHOT-4f5a65f057ff9c0421f5c9bc"
+      },
+      "b": {
+        "lat": 34.1903256,
+        "lng": 133.0702827,
+        "landId": "OSM-SNAPSHOT-7abf8bd43070ce76286126e3"
+      },
+      "km": 3.082,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    },
+    {
+      "id": "shimanami-moped-6",
+      "name": "来島海峡大橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.1295893,
+        "lng": 133.0183398,
+        "landId": "OSM-SNAPSHOT-7abf8bd43070ce76286126e3"
+      },
+      "b": {
+        "lat": 34.111267,
+        "lng": 132.9759412,
+        "landId": "JP-SHIKOKU"
+      },
+      "km": 5.927,
+      "vehicles": [
+        "50",
+        "125"
+      ],
+      "source": "B_Navi shimanami-bridge-references.js blob undefined",
+      "quality": "reference-estimate"
+    }
+  ]
+}
