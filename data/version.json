@@ -1,9 +1,9 @@
 {
-  "appVersion": "1.5.44-dev1",
-  "dbVersion": "2.8.23",
+  "appVersion": "1",
+  "dbVersion": "1",
   "spots": 3763,
   "roadStations": 1234,
   "dataFile": "data/app_data.js",
   "updated": "2026-11-24",
-  "buildType": "DEV clipboard GPX handoff"
+  "buildType": "PWA version 1"
 }
