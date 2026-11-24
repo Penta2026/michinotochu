@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "description": "Research registry only. Not accepted by land-distance.js. Road endpoints and complete segment distances require verification; null never means permitted.",
+  "candidates": [
+    {
+      "id": "onomichi-r317",
+      "name": "尾道大橋",
+      "from": "本州",
+      "to": "向島",
+      "type": "bridge",
+      "vehicles": [
+        "50",
+        "125",
+        "126"
+      ],
+      "publishedKm": 0.3865,
+      "source": "https://www.pref.hiroshima.lg.jp/uploaded/life/1099333_9545228_misc.pdf",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "shimanami-e76",
+      "name": "西瀬戸自動車道",
+      "from": "本州",
+      "to": "四国",
+      "type": "bridge",
+      "vehicles": [
+        "126"
+      ],
+      "publishedKm": 59.4,
+      "source": "https://www.jb-honshi.co.jp/customer_index/guide/route-guide/use_e.html",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "whole-route",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "akashi",
+      "name": "明石海峡大橋",
+      "from": "本州",
+      "to": "淡路島",
+      "type": "bridge",
+      "vehicles": [
+        "126"
+      ],
+      "publishedKm": 3.911,
+      "source": "https://www.jb-honshi.co.jp/customer_index/guide/route-guide/use_a.html",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "naruto",
+      "name": "大鳴門橋",
+      "from": "淡路島",
+      "to": "四国",
+      "type": "bridge",
+      "vehicles": [
+        "126"
+      ],
+      "publishedKm": 1.629,
+      "source": "https://www.jb-honshi.co.jp/customer_index/guide/route-guide/use_a.html",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "seto-e30",
+      "name": "瀬戸中央自動車道",
+      "from": "本州",
+      "to": "四国",
+      "type": "bridge",
+      "vehicles": [
+        "126"
+      ],
+      "publishedKm": 37.3,
+      "source": "https://www.jb-honshi.co.jp/customer_index/guide/route-guide/use_d.html?newwindow=true",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "whole-route",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "kanmon-bridge",
+      "name": "関門橋",
+      "from": "本州",
+      "to": "九州",
+      "type": "bridge",
+      "vehicles": [
+        "126"
+      ],
+      "publishedKm": 1.068,
+      "source": "https://kanmon.gr.jp/アクセス/",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "kanmon-road",
+      "name": "関門トンネル車道",
+      "from": "本州",
+      "to": "九州",
+      "type": "tunnel",
+      "vehicles": [
+        "125",
+        "126"
+      ],
+      "publishedKm": null,
+      "source": "https://www.w-nexco.co.jp/faq/09/",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "kanmon-walk",
+      "name": "関門トンネル人道",
+      "from": "本州",
+      "to": "九州",
+      "type": "tunnel",
+      "vehicles": [
+        "50"
+      ],
+      "publishedKm": 0.78,
+      "source": "https://www.w-nexco.co.jp/faq/09/",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "push",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "ondo",
+      "name": "音戸大橋",
+      "from": "本州",
+      "to": "倉橋島",
+      "type": "bridge",
+      "vehicles": null,
+      "publishedKm": null,
+      "source": "https://www.jbec.or.jp/photoarchives/34_ondoohashi/",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "hayase",
+      "name": "早瀬大橋",
+      "from": "倉橋島",
+      "to": "能美島・江田島",
+      "type": "bridge",
+      "vehicles": null,
+      "publishedKm": 0.62,
+      "source": "https://www.pref.hiroshima.lg.jp/soshiki/209/hayaseohashihoshutaishin.html",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    },
+    {
+      "id": "akinada",
+      "name": "安芸灘大橋",
+      "from": "本州",
+      "to": "下蒲刈島",
+      "type": "bridge",
+      "vehicles": [
+        "50",
+        "125",
+        "126"
+      ],
+      "publishedKm": null,
+      "source": "https://www.hprc.or.jp/toll/",
+      "status": "pending-endpoint-verification",
+      "distanceScope": "structure-only",
+      "travelMode": "ride",
+      "a": null,
+      "b": null,
+      "km": null
+    }
+  ]
+}
