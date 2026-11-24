@@ -51,3 +51,9 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 
 ## 工程7.6 公開準備
 mainとの差分確認時59コミット先行、遅れ0、288ファイル。PWA/DB表示2、SWキャッシュ2、更新時のworker有効化待ち、旧保存キー維持、未登録接続除外の注記、OSM attributionとODbL README、更新履歴候補を追加。新規 Stage 7.6 release upgrade gate で旧mainを同一originに配信し保存→v2差替→SW更新→保存保持→抽選を試験、7.5も再実行する。結果未確認。全国主要橋・全国検証・B_Navi実機受信は未完了。mainは更新せず公開ゲート確認後に判断。
+
+## 工程7.6 更新試験合格（2026-11-24）
+- Actions run 45343700510 / job 138273084830: success。Chromium 3 passed (10.2s)。すごろく回帰2.7s、SW・オフライン2.0s、旧版からの更新4.2s。artifact stage76-release-report ID 14896379660。
+- 同一originで旧main Ver1からVer2に更新し、お気に入りJSONの完全一致、旧キャッシュ削除、新キャッシュ生成、PWA 2 / DB 2表示、更新後抽選を確認。
+- 公開候補の自動試験ゲート合格。全国主要橋の残り、全国距離検証、B_Navi実機受信、旅の履歴個別試験は未完了。main/B_Naviは今回変更しない。部分対応の公開可否を判断してからmainへ反映する。
+- 実行URL https://github.com/Penta2026/michinotochu/actions/runs/45343700510
