@@ -21,7 +21,7 @@ def main():
  graph={};seeds=[];ways={}
  for w in root.findall("way"):
   tags={t.attrib["k"]:t.attrib["v"] for t in w.findall("tag")};refs=[n.attrib["ref"] for n in w.findall("nd")]
-  if tags.get("highway") not in ("primary","secondary","tertiary","unclassified","residential","primary_link","secondary_link"):continue
+  if tags.get("highway") not in ("trunk","primary","secondary","tertiary","unclassified","residential","primary_link","secondary_link"):continue
   if tags.get("motorroad")=="yes" or tags.get("access") in ("no","private") or tags.get("motor_vehicle") in ("no","private") or tags.get("motorcycle") in ("no","private"):continue
   if not all(n in nodes for n in refs):continue
   ref=tags.get("ref","");is317="317" in ref.split(";")
