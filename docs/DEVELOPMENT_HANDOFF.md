@@ -31,3 +31,6 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 ## 工程7.3 尾道大橋登録
 - Actions run 45340313330 / artifact 14894739988 を取得。ジョブ成功だが候補0件。原因は抽出器の highway=trunk 除外。実XMLで OSM way 90964667 (国道317号・尾道大橋、trunk、2車線、oneway指定なし) を確認。実道路3ノード、両端をGitHubの133_34タイルで照合。本州→向島、中心線長0.388km。全車種の推定用接続として登録。実走ルートの保証ではない。
 - source DB、runtime DB、全国候補、抽出器、回帰試験更新。既知の実座標と陸地IDの対応表を用いた距離エンジン試験で旧GPX推定182.258km、80km超過。全GeoJSONによる回帰試験は未実行。126ccしまなみ高速・他全国接続未完了。main/B_Navi未変更。
+
+## 工程7.5 部分回帰試験
+実runtimeデータを模擬fetchで読み込み、広島起点、RS形式ID1233件、3車種×30/80/150kmの9条件正常。うち3条件候補なし、6条件予算内・GPX生成確認。RS形式以外の道の駅ID1件は要確認。変更前app.jsはmainとrunSugoroku以外一致。非同期リセット対策追加・構文確認。詳細 docs/STAGE75_REGRESSION.md。実ブラウザ・SW・保存・B_Navi実機受信・寄り道・全国橋補完は未検証。main/B_Navi未変更。
