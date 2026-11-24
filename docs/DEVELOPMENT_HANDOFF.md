@@ -37,3 +37,7 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 
 ## 工程7.5 ブラウザ試験準備
 旧直線距離説明を経由地込み推定に修正。tests/stage75-browser.spec.cjs と .github/workflows/stage75-browser.yml を追加。Chromiumで実データ抽選、GPXダウンロード、クリップボード連携、お気に入り保存・再読込、寄り道、リセット、SWキャッシュ・オフラインを検証する。起動コミット d884e5560978675f50a6217df270ca30fdcaff0c。実行結果未確認。Actionsの Stage 7.5 browser regression のrun IDを取得して結果確認。B_Navi実機受信、全国橋補完は別途必要。main未変更。
+
+## 工程7.5 ブラウザ試験環境の修正
+- run 45341752070 / job 138266793948 は失敗。ubuntu-latest が Ubuntu 26.04.1 を選択し、Playwright 1.56.1 の Chromium 依存関係インストールが非対応。アプリのブラウザ試験は開始されていない。
+- stage75-browser.yml の runner を ubuntu-24.04 に固定。修正コミット 79f3cf8fe8ec071d9a3d78a01350250eb1315955。新規push起動のrunを確認すること（旧runの再実行では旧設定が使われる）。main/B_Navi未変更。実ブラウザ試験結果は未確定。
