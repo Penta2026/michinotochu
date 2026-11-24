@@ -1,11 +1,11 @@
-/* 道の途中。 v1.5.44-dev1
+/* 道の途中。 v1
  * HTTPS配信と専用localhostプレビューでService Workerを登録する。
  * 元のローカル開発版と同じURL・ポートで同時に動かさないこと。
  * 端末内のお気に入り・旅の履歴は自動的に共有されない。
  */
 "use strict";
-const PWA_APP_VERSION = "1.5.44-dev1";
-const PWA_DEFAULT_DB_VERSION = "2.8.23";
+const PWA_APP_VERSION = "1";
+const PWA_DEFAULT_DB_VERSION = "1";
 const PWA_HOSTED = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
 function pwaStoredDbVersion() { return PWA_DEFAULT_DB_VERSION; }
 function finishStartup() {
