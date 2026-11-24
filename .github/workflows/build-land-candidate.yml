@@ -1,0 +1,31 @@
+name: Build land polygon candidate
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install geopandas pyogrio shapely
+      - name: Download complete OSM polygons
+        run: |
+          curl --fail --location --retry 3 -o land.zip https://osmdata.openstreetmap.de/download/land-polygons-complete-4326.zip
+          sha256sum land.zip > source.sha256
+          unzip -q land.zip -d land-source
+      - name: Build and classify
+        run: |
+          shp=$(find land-source -name '*.shp' -print -quit)
+          test -n "$shp"
+          python tools/build-japan-land.py "$shp" japan-land.geojson --anchors data/land-anchors.json
+          node tools/build-land-sidecar.cjs japan-land.geojson land-sidecar.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: japan-land-candidate
+          path: |
+            japan-land.geojson
+            land-sidecar.json
+            source.sha256
