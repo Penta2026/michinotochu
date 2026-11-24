@@ -77,7 +77,7 @@
 <section id="sug" class="view"><div class="screen-card menu-sug">
   <div class="screen-title-card"><h2>🎲  道の駅すごろく</h2><button class="screen-close" onclick="showView('home')">×</button></div>
   <div class="screen-body"><div id="sugStart"></div>
-    <div class="choice-section"><h3>📏 ゴールまでの目安直線距離（上限）</h3><select id="sugRadius" class="logic-control"><option selected>50</option><option>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="sugRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="sugRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
+    <div class="choice-section"><h3>距離の基準</h3><select id="sugDistanceMode"><option value="direct">直線距離（従来）</option><option value="estimated">推定走行距離（試験）</option></select><div id="sugEstimateOptions" hidden><label>排気量 <select id="sugVehicle"><option value="50">50cc</option><option value="125" selected>51～125cc</option><option value="126">126cc以上</option></select></label><label>海越え <select id="sugSea"><option value="conditional">距離内なら許可</option><option value="none">なし</option></select></label><p class="meta">試験用：取得済みZIPから展開した japan-land.geojson を選択。未登録の接続は除外します。</p><input id="sugLandFile" type="file" accept=".geojson,.json"><div id="sugLandStatus" class="meta">陸地データ未読み込み</div></div></div><div class="choice-section"><h3>📏 距離の上限（片道・経由地込みは推定モードのみ）</h3><select id="sugRadius" class="logic-control"><option selected>50</option><option>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="sugRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="sugRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>🎯 道の駅数の上限（ゴール込み）</h3><select id="sugCount" class="logic-control"><option value="0" selected>ランダム</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select><div class="choice-grid" data-target="sugCount" data-values="0,1,2,3,4,5,6" data-labels="ランダム,1,2,3,4,5,6"></div></div>
     <div class="choice-section"><h3>🎁 ミッション</h3><input type="checkbox" id="sugMission" checked class="logic-control"><div class="toggle-choice"><button data-mission="on" class="active">あり</button><button data-mission="off">なし</button></div></div>
     <div class="note">※ ゴールはアプリがランダムに決定。途中の道の駅はゴール方向±45°以内から選びます。駅が足りない場合はある駅だけを表示します。<br>※ 距離は直線距離です。実際の走行距離はナビで確認してください。</div><button class="primary action-main" onclick="runSugoroku()">🎲 すごろく開始！</button>
@@ -287,7 +287,7 @@
 <script src="assets/home/home_sprite_2.js?v=1"></script>
 <script src="assets/home/home_sprite_3.js?v=1"></script>
 <script src="gpx-export.js?v=1"></script>
-<script src="sugoroku-route.js?v=1"></script>
+<script src="land-lookup.js"></script><script src="land-distance.js"></script><script src="budget-sugoroku.js"></script><script src="sugoroku-land-ui.js"></script><script src="sugoroku-route.js?v=1"></script>
 <script src="app.js?v=1"></script>
 <script src="detour-enhancements.js?v=1"></script>
 <script src="pwa.js?v=1"></script>
