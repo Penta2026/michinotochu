@@ -141,6 +141,57 @@
       "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
       "quality": "reference-estimate",
       "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
+    },
+    {
+      "id": "onomichi-r317",
+      "name": "尾道大橋",
+      "type": "bridge",
+      "a": {
+        "lat": 34.4107454,
+        "lng": 133.2178242,
+        "landId": "JP-HONSHU"
+      },
+      "b": {
+        "lat": 34.4079301,
+        "lng": 133.2153351,
+        "landId": "OSM-SNAPSHOT-4baf19a766695d915e97bbe5"
+      },
+      "km": 0.388,
+      "vehicles": [
+        "50",
+        "125",
+        "126"
+      ],
+      "source": "OSM way 90964667; Actions run 45340313330 artifact 14894739988",
+      "quality": "mapped-road-centerline-estimate",
+      "endpointCheck": "Both endpoints classified land in runtime tile 133_34, snapshot 785a6f455ed83727c8f6c6837241f0ee28bc7e1b3cb571d510fed7c09d60c0fc",
+      "osmNodeIds": [
+        "699712992",
+        "3130977239",
+        "699712922"
+      ],
+      "osmPoints": [
+        [
+          34.4107454,
+          133.2178242
+        ],
+        [
+          34.4086292,
+          133.2159688
+        ],
+        [
+          34.4079301,
+          133.2153351
+        ]
+      ],
+      "osmTags": {
+        "highway": "trunk",
+        "ref": "317",
+        "bridge": "yes",
+        "bridge:name": "尾道大橋",
+        "lanes": "2"
+      },
+      "note": "Bidirectional bridge way; no one-way or motor vehicle restrictions tagged on the way. Distance planning only; not live navigation."
     }
   ],
   "sourceArchiveSha256": "bf79eb76278f0ae8e6b45885065b1f7ad702a08df6957d6e423972260d5e9820",
@@ -152,5 +203,5 @@
     "OSM-SNAPSHOT-4f5a65f057ff9c0421f5c9bc": "JP-HAKATAJIMA",
     "OSM-SNAPSHOT-7abf8bd43070ce76286126e3": "JP-OSHIMA-EHIME"
   },
-  "notes": "Existing connection IDs refer to original snapshot. Aliases are proposed fixed IDs for rebuilt polygons; do not mix snapshots."
+  "notes": "Original snapshot IDs with fixedIdAliases for runtime generation. Onomichi endpoints verified against runtime snapshot; generator rechecks against supplied polygon snapshot."
 }
