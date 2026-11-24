@@ -1,5 +1,5 @@
 # 道の途中。推定走行距離 開発引継ぎ
-更新: 2026-11-24 / 工程7.2
+更新: 2026-11-24 / 工程7.3（進行中）
 ## 正本と公開方針
 - 本番 main: 7468c1d66e403d648fdd347f4f3e6de7f4d6e03a（今回の開発開始時点）。開発: land-engine-stage2。公開前に main の現状と差分を再確認。
 - B_Navi (Penta2026/b_navi) は mixed-v3 安定版を維持。本件では変更しない。
@@ -17,3 +17,9 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 - 出典 OSM land polygons / © OpenStreetMap contributors, ODbL。公開前に出典表示と派生DBの提供条件を確認。
 - データ生成ツール tools/build-japan-land.py, tools/build-land-sidecar.cjs, tools/build-land-runtime.py。Actions build-land-candidate.yml, prepare-land-runtime.yml。関連仕様 docs/LAND_*.md, docs/SUGOROKU_STAGE6.md。
 - 次回はこの文書と現在のブランチを照合し、実行結果を更新する。再アップロードや再ダウンロードは必要な場合だけ。
+
+## 工程7.3 更新
+- GitHub上の data/land-runtime/manifest.json と connections.json の実ファイル取得成功。manifest snapshot 785a6f455ed83727c8f6c6837241f0ee28bc7e1b3cb571d510fed7c09d60c0fc、4997件、固定IDの原付6橋を確認。元ZIPとは別スナップショット。全タイルとspotsの再検証は未実施。
+- 尾道大橋は国道317号の一般道路で、県の道路資料で本州～向島接続を確認。https://www.pref.hiroshima.lg.jp/uploaded/attachment/520579.pdf 。直接OSM API取得はDNSエラー。道路端点・区間長は未確定。
+- tools/inspect-onomichi.py と .github/workflows/inspect-onomichi.yml を追加。OSM APIの小範囲XMLからR317橋候補、道路ノード列、端点の実陸地照合、距離・タグ・way IDを出力。候補のみ、通行制限・一方通行・道路連続性を人または追加検証で確定するまで有効化禁止。Actions起動・成功未確認。成果物 onomichi-road-evidence を確認すること。
+- 次: 尾道大橋候補の確認・正式接続登録、瀬戸大橋/明石・鳴門/関門/江田島/安芸灘/126ccしまなみの接続補完。未確認接続は除外。main/B_Navi未変更。
