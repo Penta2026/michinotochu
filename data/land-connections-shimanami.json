@@ -23,8 +23,9 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     },
     {
       "id": "shimanami-moped-2",
@@ -45,8 +46,9 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     },
     {
       "id": "shimanami-moped-3",
@@ -67,8 +69,9 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     },
     {
       "id": "shimanami-moped-4",
@@ -89,8 +92,9 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     },
     {
       "id": "shimanami-moped-5",
@@ -111,8 +115,9 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     },
     {
       "id": "shimanami-moped-6",
@@ -133,8 +138,19 @@
         "50",
         "125"
       ],
-      "source": "B_Navi shimanami-bridge-references.js blob undefined",
-      "quality": "reference-estimate"
+      "source": "B_Navi shimanami-bridge-references.js blob 9feaa40663ef5c564ecd347b3f14d329320f38fe",
+      "quality": "reference-estimate",
+      "endpointCheck": "Both endpoints strictly inside corresponding land polygons; verified against uploaded ZIP"
     }
-  ]
+  ],
+  "sourceArchiveSha256": "bf79eb76278f0ae8e6b45885065b1f7ad702a08df6957d6e423972260d5e9820",
+  "fixedIdAliases": {
+    "OSM-SNAPSHOT-4baf19a766695d915e97bbe5": "JP-MUKAISHIMA",
+    "OSM-SNAPSHOT-8cef03800275b60a672f8572": "JP-INNOSHIMA",
+    "OSM-SNAPSHOT-2f8662b25c60ff1ff2762220": "JP-IKUCHIJIMA",
+    "OSM-SNAPSHOT-cc435a4c03031effd17afcfa": "JP-OMISHIMA",
+    "OSM-SNAPSHOT-4f5a65f057ff9c0421f5c9bc": "JP-HAKATAJIMA",
+    "OSM-SNAPSHOT-7abf8bd43070ce76286126e3": "JP-OSHIMA-EHIME"
+  },
+  "notes": "Existing connection IDs refer to original snapshot. Aliases are proposed fixed IDs for rebuilt polygons; do not mix snapshots."
 }
