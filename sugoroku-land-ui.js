@@ -11,13 +11,19 @@ async function loadBase(){if(!basePromise)basePromise=Promise.all([json("manifes
  for(const c of connections)for(const p of [c.a,c.b])add(p.lat,p.lng,p.landId);
  return {manifest,known,connections};
  }).catch(e=>{basePromise=null;throw e;});return basePromise;}
-state.prepare=async function(origin){
+state.prepare=async function(origin,extraPoints=[]){
  const b=await loadBase();const key=Math.floor(origin.lng)+"_"+Math.floor(origin.lat);
  if(!b.manifest.tiles.includes(key))throw Error("出発地点の陸地データがありません");
  if(!state.tiles.has(key)){state.tiles.set(key,json(key+".json").then(root.LandLookup.create).catch(e=>{state.tiles.delete(key);throw e;}));}
- const tile=await state.tiles.get(key),lookup={classify(lat,lng){
+ const loaded=new Map([[key,await state.tiles.get(key)]]);
+ const extraKeys=new Set(extraPoints.filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lng)&&!b.known.has(p.lat+","+p.lng)).map(p=>Math.floor(p.lng)+"_"+Math.floor(p.lat)).filter(k=>b.manifest.tiles.includes(k)&&k!==key));
+ await Promise.all([...extraKeys].map(async k=>{
+  if(!state.tiles.has(k))state.tiles.set(k,json(k+".json").then(root.LandLookup.create).catch(e=>{state.tiles.delete(k);throw e;}));
+  loaded.set(k,await state.tiles.get(k));
+ }));
+ const lookup={classify(lat,lng){
  const k=lat+","+lng;if(b.known.has(k)){const id=b.known.get(k);return {status:id?"land":"unclassified",landId:id};}
- if(Math.floor(lng)+"_"+Math.floor(lat)===key)return tile.classify(lat,lng);
+ const tile=loaded.get(Math.floor(lng)+"_"+Math.floor(lat));if(tile)return tile.classify(lat,lng);
  return {status:"unclassified",landId:null};
  }};
  return root.LandDistance.create({lookup,connections:b.connections});
