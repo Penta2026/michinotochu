@@ -222,10 +222,10 @@
 
 <section id="season" class="view"><div class="screen-card menu-season">
   <div class="screen-title-card"><h2>🌸  季節を走る</h2><button class="screen-close" onclick="showView('home')">×</button></div>
-  <div class="screen-body"><div id="seasonStart"></div>
+  <div class="screen-body"><div id="seasonStart"></div><div class="choice-section"><h3>🏍️ 排気量</h3><label><select id="seasonVehicle"><option value="50">50cc</option><option value="125" selected>51～125cc</option><option value="126">126cc以上</option></select></label><div id="seasonLandStatus" class="meta" aria-live="polite"></div></div>
     <div class="choice-section"><h3>🌼 どの季節の景色を探す？</h3><select id="seasonSelect" class="logic-control"><option value="auto">今の季節（自動）</option><option>春</option><option>夏</option><option>秋</option><option>冬</option></select><div class="choice-grid season-grid" data-target="seasonSelect" data-values="auto,春,夏,秋,冬" data-labels="今の季節（自動）,🌸 春,☀ 夏,🍁 秋,❄ 冬"></div></div>
-    <div class="choice-section"><h3>📏 最大直線距離</h3><select id="seasonRadius" class="logic-control"><option>50</option><option selected>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="seasonRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="seasonRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
-    <div class="note">※ 距離は地図上の直線距離です。実際の走行距離は道路状況やルートにより増減します。</div><button class="primary action-main" onclick="runSeason()">✨ この条件で季節の候補を見る</button><div id="seasonResult" class="spot-grid"></div>
+    <div class="choice-section"><h3>📏 指定走行距離（上限）</h3><select id="seasonRadius" class="logic-control"><option>50</option><option selected>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="seasonRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="seasonRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
+    <div class="note">※ 推定走行距離が指定上限以内の季節スポットを近い順に最大12件表示します。未登録の海越え・フェリーは除外します。実際の道路距離はナビで確認してください。</div><button class="primary action-main" onclick="runSeason()">✨ この条件で季節の候補を見る</button><div id="seasonResult" class="spot-grid"></div>
   </div></div></section>
 
 <section id="nearby" class="view"><div class="screen-card menu-nearby">
