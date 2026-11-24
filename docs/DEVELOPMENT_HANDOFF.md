@@ -27,3 +27,7 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 ## 工程7.3 追加確認
 - inspect-onomichi の起動コミット 90b3ba5f6ab8b54847aaafd5d120b2e0a9cc7dfb。利用可能な commit workflow 検索はPR起動のみ対象で、今回のpush起動結果は取得不能。run ID があれば成果物・ジョブログ取得可能。実行成功・候補生成未確認。再実行不要、既存runを確認する。
 - 次回: Actions の Inspect Onomichi R317 connection の run URL から run ID を取得し、onomichi-road-evidence の候補を確認。正式登録は道路連続性・方向・車種制限・同一ポリゴンスナップショットの照合後。地域データの再取得不要。main/B_Navi未変更。
+
+## 工程7.3 尾道大橋登録
+- Actions run 45340313330 / artifact 14894739988 を取得。ジョブ成功だが候補0件。原因は抽出器の highway=trunk 除外。実XMLで OSM way 90964667 (国道317号・尾道大橋、trunk、2車線、oneway指定なし) を確認。実道路3ノード、両端をGitHubの133_34タイルで照合。本州→向島、中心線長0.388km。全車種の推定用接続として登録。実走ルートの保証ではない。
+- source DB、runtime DB、全国候補、抽出器、回帰試験更新。既知の実座標と陸地IDの対応表を用いた距離エンジン試験で旧GPX推定182.258km、80km超過。全GeoJSONによる回帰試験は未実行。126ccしまなみ高速・他全国接続未完了。main/B_Navi未変更。
