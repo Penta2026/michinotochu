@@ -1,0 +1,22 @@
+/* Synthetic fixtures only: not geographic coastline evidence. */
+const assert=require("node:assert/strict");
+const {create}=require("../land-lookup.js");
+const ring=(x,y,w=1)=>[[x,y],[x+w,y],[x+w,y+w],[x,y+w],[x,y]];
+const feature=(id,coordinates,type="Polygon")=>({type:"Feature",properties:{landId:id},geometry:{type,coordinates}});
+const f=[feature("A",[ring(130,34),ring(130.2,34.2,.2)]),feature("B",[ring(132,34)]),feature("C",[[ring(134,34)],[ring(136,34)]],"MultiPolygon"),feature("D",[ring(130.7,34.7)])];
+const engine=create({type:"FeatureCollection",features:f});
+assert.deepEqual(engine.classify(34.1,130.1),{landId:"A",status:"land"});
+assert.equal(engine.classify(34.3,130.3).status,"unclassified");
+assert.equal(engine.classify(34.5,131.5).status,"unclassified");
+assert.equal(engine.classify(34,130.5).status,"boundary");
+assert.equal(engine.classify(34.8,130.8).status,"ambiguous");
+assert.equal(engine.classify(34.5,132.5).landId,"B");
+assert.equal(engine.classify(34.5,134.5).landId,"C");
+assert.equal(engine.classify(34.5,136.5).landId,"C");
+assert.equal(engine.classify(null,130).status,"invalid");
+assert.equal(engine.classify(95,130).status,"invalid");
+const input=Array.from({length:4997},(_,id)=>({id,lat:34.1,lng:130.1,name:"fixture"}));
+const out=engine.classifyAll(input);
+assert.equal(out.length,4997);assert.ok(out.every((s,i)=>s.id===i&&s.landId==="A"&&s.name==="fixture"));assert.ok(!("landId" in input[0]));
+assert.throws(()=>create({type:"FeatureCollection",features:[feature("X",[[[0,0],[1,0],[1,1],[0,1]]])]}));
+console.log("Land lookup synthetic regression: PASS");
