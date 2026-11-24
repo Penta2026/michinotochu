@@ -23,5 +23,35 @@
     "id": "JP-OKINAWA",
     "lat": 26.2124,
     "lng": 127.6809
+  },
+  {
+    "id": "JP-MUKAISHIMA",
+    "lat": 34.3607588,
+    "lng": 133.1928645
+  },
+  {
+    "id": "JP-INNOSHIMA",
+    "lat": 34.3038434,
+    "lng": 133.1536838
+  },
+  {
+    "id": "JP-IKUCHIJIMA",
+    "lat": 34.2656722,
+    "lng": 133.0681592
+  },
+  {
+    "id": "JP-OMISHIMA",
+    "lat": 34.2174164,
+    "lng": 133.0525663
+  },
+  {
+    "id": "JP-HAKATAJIMA",
+    "lat": 34.1989912,
+    "lng": 133.0774513
+  },
+  {
+    "id": "JP-OSHIMA-EHIME",
+    "lat": 34.1295893,
+    "lng": 133.0183398
   }
 ]
