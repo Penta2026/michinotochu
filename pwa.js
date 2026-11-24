@@ -1,11 +1,11 @@
-/* 道の途中。 v1
+/* 道の途中。 v2
  * HTTPS配信と専用localhostプレビューでService Workerを登録する。
  * 元のローカル開発版と同じURL・ポートで同時に動かさないこと。
  * 端末内のお気に入り・旅の履歴は自動的に共有されない。
  */
 "use strict";
-const PWA_APP_VERSION = "1";
-const PWA_DEFAULT_DB_VERSION = "1";
+const PWA_APP_VERSION = "2";
+const PWA_DEFAULT_DB_VERSION = "2";
 const PWA_HOSTED = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
 function pwaStoredDbVersion() { return PWA_DEFAULT_DB_VERSION; }
 function finishStartup() {
@@ -26,7 +26,17 @@ async function updateEverything() {
   }
   try {
     const registration = await navigator.serviceWorker?.getRegistration("./");
-    if (registration) await registration.update();
+    if (registration) {
+      await registration.update();
+      const worker=registration.installing||registration.waiting;
+      if(worker && worker.state!=="activated"){
+        await new Promise((resolve,reject)=>{
+          const timer=setTimeout(()=>{worker.removeEventListener("statechange",check);reject(new Error("update timed out"));},45000);
+          function check(){if(worker.state==="activated"||worker.state==="redundant"){clearTimeout(timer);worker.removeEventListener("statechange",check);worker.state==="activated"?resolve():reject(new Error("update failed"));}}
+          worker.addEventListener("statechange",check);check();
+        });
+      }
+    }
     location.reload();
   } catch (error) {
     alert("更新の確認ができませんでした。通信状態を確認して再度試してください。");
