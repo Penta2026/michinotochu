@@ -1,8 +1,8 @@
-/* 道の途中。PWAキャッシュ (1) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (2) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "1";
+const VERSION = "2";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
-const CACHE_NAME = CACHE_PREFIX + VERSION + "-land7";
+const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
   "./index.html", "./style.css", "./app.js", "./detour-enhancements.js",
   "./pwa.js", "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
@@ -18,7 +18,7 @@ const CORE_FILES = [
 ];
 const OPTIONAL_FILES = [
   "./", "./history.html", "./privacy.html", "./terms.html", "./legal.html",
-  "./install.html", "./support.html", "./assets/hero_banner.png",
+  "./data/land-runtime/README.md", "./install.html", "./support.html", "./assets/hero_banner.png",
   "./assets/hero_banner_pc.png", "./assets/home/home_background.png",
   "./assets/icons/ic_feature_market.png"
 ];
