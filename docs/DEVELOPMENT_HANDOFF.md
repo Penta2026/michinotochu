@@ -34,3 +34,6 @@ GitHub data/land-runtime/{manifest,spots,connections,132_34}.json は確認時40
 
 ## 工程7.5 部分回帰試験
 実runtimeデータを模擬fetchで読み込み、広島起点、RS形式ID1233件、3車種×30/80/150kmの9条件正常。うち3条件候補なし、6条件予算内・GPX生成確認。RS形式以外の道の駅ID1件は要確認。変更前app.jsはmainとrunSugoroku以外一致。非同期リセット対策追加・構文確認。詳細 docs/STAGE75_REGRESSION.md。実ブラウザ・SW・保存・B_Navi実機受信・寄り道・全国橋補完は未検証。main/B_Navi未変更。
+
+## 工程7.5 ブラウザ試験準備
+旧直線距離説明を経由地込み推定に修正。tests/stage75-browser.spec.cjs と .github/workflows/stage75-browser.yml を追加。Chromiumで実データ抽選、GPXダウンロード、クリップボード連携、お気に入り保存・再読込、寄り道、リセット、SWキャッシュ・オフラインを検証する。起動コミット d884e5560978675f50a6217df270ca30fdcaff0c。実行結果未確認。Actionsの Stage 7.5 browser regression のrun IDを取得して結果確認。B_Navi実機受信、全国橋補完は別途必要。main未変更。
