@@ -17,14 +17,9 @@ const points=[
 ];
 assert.deepEqual(points.map(engine.land),["JP-HONSHU","JP-HONSHU","JP-HONSHU",db.connections[2].b.landId,db.connections[4].b.landId]);
 const sections=points.slice(1).map((p,i)=>({direct:km(points[i],p),estimate:engine.estimate(points[i],p)}));
-assert.equal(sections[2].estimate,null);
-assert.equal(engine.itinerary(points[0],points.slice(1)),null);
+assert.ok(sections[2].estimate);
+const full=engine.itinerary(points[0],points.slice(1)); assert.ok(full && full.km>80);
 assert.equal(engine.estimate(points[3],points[4],{vehicle:"126"}),null);
 assert.equal(engine.estimate(points[3],points[4],{sea:"none"}),null);
 assert.deepEqual(sections[3].estimate.crossings,["shimanami-moped-4","shimanami-moped-5"]);
-// Hypothetical gateway approach: direct*factor to first bridge entry.
-// This is NOT a legal connection, full estimate, or proof of road distance.
-const via=db.connections[0].a;
-const scenario=sections[0].estimate.km+sections[1].estimate.km+km(points[2],via)*1.45+engine.estimate(via,points[3]).km+sections[3].estimate.km;
-assert.ok(scenario>80);
-console.log(JSON.stringify({sections,scenario,fullEstimate:null,reason:"missing mainland connection"},null,2));
+console.log(JSON.stringify({sections,fullEstimate:full.km,over80:full.km>80},null,2));
