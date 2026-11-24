@@ -215,9 +215,10 @@ function runDetourGacha() {
         <div id="detourSelectionStatus" class="detour-route-final-status">${detourSelectedCount()}件追加済み</div>
         <div class="detour-submit-actions">
           <button id="detourSelectedRoute" type="button" class="primary action-main"
-            onclick="openSelectedDetourRoute()">🏍️ ルートを決定してGoogleマップへ</button>
+            onclick="openSelectedDetourRoute()">🗺 グーグルマップに送る</button>
+          <button id="detourSendBNavi" type="button" class="soft action-main route-bnavi" onclick="sendSelectedDetourToBNavi()">B_Naviに送る</button>
           <button id="detourSaveGpx" type="button" class="soft action-main"
-            onclick="saveSelectedDetourGpx()">💾 GPX保存</button>
+            onclick="saveSelectedDetourGpx()">💾 GPXを保存</button>
         </div>
       </div>
       <p class="meta">ゴール「${esc(destination.name || "目的地")}」は変更しません。寄り道はそれぞれの基準地点の直後、ゴール付近ならゴール手前に配置します。</p>
@@ -231,10 +232,12 @@ function updateDetourSelectionUi() {
   const go = $("detourSelectedRoute");
   if (go) {
     go.disabled = count < 1;
-    go.textContent = count ? "🏍️ ルートを決定してGoogleマップへ" : "🏍️ 寄り道を追加してください";
+    go.textContent = "🗺 グーグルマップに送る";
   }
   const gpx = $("detourSaveGpx");
   if (gpx) gpx.disabled = !detourRoute.origin || !detourRoute.points.length;
+  const send = $("detourSendBNavi");
+  if (send) send.disabled = !detourRoute.origin || !detourRoute.points.length;
   (window._detourRegisteredPool || []).forEach((spot, i) => {
     const order = detourSelectionNumber(detourPointKey(spot));
     const box = $("detourPick" + i), tag = $("detourOrder" + i);
