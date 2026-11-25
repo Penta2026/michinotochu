@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/v5-upgrade.yml'
       - 'tests/v5-upgrade.spec.cjs'
+      - 'tests/v5-fallback.spec.cjs'
 permissions:
   contents: read
 jobs:

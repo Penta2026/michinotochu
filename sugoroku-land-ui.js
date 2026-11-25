@@ -2,7 +2,18 @@
 (function(root){"use strict";
 const state={engine:null,base:null,tiles:new Map()};root.SugorokuLandUI=state;
 const base="./data/land-runtime/";
-async function json(name){const r=await fetch(base+name);if(!r.ok)throw Error("陸地データ取得失敗: "+name);return r.json();}
+// Bound both headers and response body; a stuck request must not poison shared promises.
+const LOAD_TIMEOUT_MS=12000;
+async function json(name){
+ const controller=new AbortController();let timer;
+ const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{reject(Error("陸地データの読み込みがタイムアウトしました: "+name+"。通信状態を確認して再抽選してください。"));controller.abort();},LOAD_TIMEOUT_MS);});
+ try{return await Promise.race([(async()=>{
+  const r=await fetch(base+name,{signal:controller.signal});
+  if(!r.ok)throw Error("陸地データ取得失敗: "+name+" (HTTP "+r.status+")");
+  return await r.json();
+ })(),timeout]);}
+ finally{clearTimeout(timer);}
+}
 let basePromise=null;
 async function loadBase(){if(!basePromise)basePromise=Promise.all([json("manifest.json"),json("spots.json"),json("connections.json")]).then(([manifest,spots,connections])=>{
  if(manifest.schemaVersion!==1||Object.keys(spots).length!==manifest.count||!Array.isArray(connections))throw Error("陸地データの形式が不正です");
