@@ -50,3 +50,10 @@ test('four draw setup screens omit the requested explanatory notes',async({page}
   await expect(page.locator('#'+id+' .action-main')).toBeVisible();
  }
 });
+
+test('home displays version only in footer',async({page})=>{
+ await page.goto('http://127.0.0.1:8765/');
+ await page.waitForFunction(()=>!document.body.classList.contains('pwa-starting'));
+ await expect(page.locator('#home .home-version')).toHaveCount(0);
+ await expect(page.locator('#footerVersion')).toContainText('PWA 5 / DB 2');
+});
