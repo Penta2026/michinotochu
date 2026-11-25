@@ -660,3 +660,10 @@ body.pwa-starting .shell,body.pwa-starting .topbar,body.pwa-starting footer{poin
 .detour-topic-select:focus-visible {outline:3px solid #e5b85b;outline-offset:2px;}
 
 .route-export-actions > .route-bnavi,.detour-submit-actions > .route-bnavi{background:#326bc1;color:#fff;border:1px solid #285ba7;}
+
+/* Optional navigation challenge */
+.navigation-mission{background:#eef7f2;border:1px solid #a9cdbb;border-left:5px solid #33846b;border-radius:12px;padding:12px 14px;margin:12px 0;color:#254e43;overflow-wrap:anywhere}
+.navigation-mission-heading{font-size:.82rem;font-weight:700;letter-spacing:.03em}
+.navigation-mission-name{display:block;font-size:1.35rem;line-height:1.5;margin:3px 0}
+.navigation-mission-detail{font-size:.88rem;line-height:1.5}
+.navigation-mission-note{font-size:.73rem;color:#50665d;margin-top:5px}
