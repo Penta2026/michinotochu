@@ -99,3 +99,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver6 任意ナビミッション（2026-11-25）
 ユーザー指定の追加ミッションをすごろく・行先ガチャの正常抽選結果に各1件、ナビ使用可40%（乱数0〜0.4未満）、レーダー使用40%（0.4〜0.8未満）、ナビなし20%（0.8以上）で表示。既存すごろくミッションのオンオフとは独立。画面表示のみ（音声なし）、安全優先で任意解除、B_Navi操作・GPX変更なし。お気に入りの任意フィールドnavigationMissionにIDを保存、過去データには非表示。PWA6/DB2、旧main 95c18a6df55da4300ec0763139634c15a97f5357 を復旧基準とする。境界・分布・両機能・GPX・保存と旧回帰の一括Actions、実機とActions未確認。main/B_Navi未変更。
+
+## Ver6 公開反映対象（2026-11-25）
+ユーザーより Ver6 navigation mission gate がグリーンとの報告あり。run ID・詳細ログは未取得。候補ブランチ navigation-mission-v6 と公開対象SHA 4cb29fec20211e2874e18fae6bdcb14882cda210 の一致、旧main 95c18a6df55da4300ec0763139634c15a97f5357 からの差分を照合。旧mainを復旧基準とする。PWA6/DB2、B_Navi・地理DB・距離計算エンジン変更なし。GitHub Pages配信と実機の追加ミッション表示は別途確認。
