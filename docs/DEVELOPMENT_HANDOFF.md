@@ -93,3 +93,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver5 ホーム画面の簡素化（2026-11-25）
 ユーザー指示によりホーム上部の重複バージョン表記 PWA Ver5 を削除。下部のfooterVersion（実PWA/DB表示）は維持。回帰試験に追加。最新コミット合格後に公開。
+
+## Ver5 公開反映対象（2026-11-25）
+ユーザーより最新の Ver5: remove redundant home version label / Ver5 draw reliability gate がグリーンになった旨の報告あり。run ID・詳細ログは未取得。候補ブランチ gacha-reliability-v5 と公開対象SHA 2caa1d5e35c6bef87c67a4b6491913bb3b34c195 の一致、旧main b2844ceaa65beb8115c11b75f109c0953f76c4ad からの差分を照合。旧mainを復旧基準とする。PWA5/DB2、B_Navi・地理DB・距離計算エンジン変更なし。GitHub Pages配信と実機での抽選停止解消は別途確認。
