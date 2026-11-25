@@ -81,3 +81,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver4 公開反映対象（2026-11-25）
 ユーザー提示のActions一覧スクリーンショットで Ver4 draw animation release gate #1、commit 4b052e6、gacha-animation-v4、緑チェック、1m46s を確認。run ID・個別テストログは未確認。公開対象SHA 4b052e63428132cf6239cf99a647b9e23ba5f04e、旧main 05fe09197d73649acc5be547184491e0843c1b8c を復旧基準とする。PWA4/DB2、B_Navi未変更。GitHub Pages配信と実機の演出表示は別途確認。
+
+## Ver5 抽選停止対策（2026-11-25）
+ユーザー報告: Ver4で開始を押しても「条件を設定してください」のまま。実機の原因未特定。コード上の未捕捉演出例外を確認、演出欠落・reject・2.8秒超の停止から復帰する共通ヘルパー、すごろく開始直後の候補確認表示、外側例外表示を追加。元抽選ロジック維持。実関数の模擬DOM/エンジン試験でmissing/reject/hangの3件合格。PWA5/DB2、Ver4→5移行と既存試験＋故障注入のActionsを1回に集約。mainは試験待ち。旧main b2844ceaa65beb8115c11b75f109c0953f76c4ad を復旧基準とする。B_Navi未変更。
