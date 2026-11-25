@@ -1,11 +1,11 @@
-/* 道の途中。PWAキャッシュ (3) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (4) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "3";
+const VERSION = "4";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
   "./index.html", "./style.css", "./app.js", "./detour-enhancements.js",
-  "./pwa.js", "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
+  "./pwa.js", "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
   "./data/app_data.js", "./data/riders_cafes.js", "./data/spot_overrides.js",
   "./data/road_summaries_chugoku.js", "./data/road_summaries_shikoku.js",
   "./data/road_summaries_kyushu_okinawa.js", "./data/road_summaries_kinki.js",
