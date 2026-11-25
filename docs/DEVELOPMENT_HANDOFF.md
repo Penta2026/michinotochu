@@ -78,3 +78,6 @@ mainとの差分確認時59コミット先行、遅れ0、288ファイル。PWA/
 
 ## Ver4 抽選演出（2026-11-25）
 Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を作成。CSS 3Dサイコロとカプセル機をローカルで描画、無音・外部素材なし。既存抽選で有効な候補を確定してから演出し、サイコロの出目は既存requestedCount（ランダム1〜6、固定時は指定値）と一致。実駅数は距離内で不足時減少。候補なしは演出なし、再抽選・リセット後の旧結果はrequest IDで破棄。prefers-reduced-motion対応。PWA4/DB2、SW資源登録、更新履歴。既存5試験＋Ver3→4更新＋演出試験を1回のActionsに集約。試験結果未確認。本番/B_Naviは変更しない。
+
+## Ver4 公開反映対象（2026-11-25）
+ユーザー提示のActions一覧スクリーンショットで Ver4 draw animation release gate #1、commit 4b052e6、gacha-animation-v4、緑チェック、1m46s を確認。run ID・個別テストログは未確認。公開対象SHA 4b052e63428132cf6239cf99a647b9e23ba5f04e、旧main 05fe09197d73649acc5be547184491e0843c1b8c を復旧基準とする。PWA4/DB2、B_Navi未変更。GitHub Pages配信と実機の演出表示は別途確認。
