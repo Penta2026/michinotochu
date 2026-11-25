@@ -1,0 +1,40 @@
+const {test,expect}=require('@playwright/test');
+const fs=require('node:fs');
+const path=require('node:path');
+test('upgrade installed v8 to v9 without losing local storage',async({page})=>{
+ const base='http://127.0.0.1:8766/';
+ page.on('dialog',d=>d.accept());
+ await page.goto(base);
+ await page.waitForFunction(()=>!!navigator.serviceWorker.controller&&typeof saveFavorite==='function');
+ await page.evaluate(()=>saveFavorite({mode:'道の駅すごろく',title:'更新前の保存',origin:{lat:34.3992388,lng:132.4406034,label:'広島'},points:[{lat:34.433767,lng:132.703576,name:'西条'}]}));
+ await page.evaluate(()=>setCurrentDestination('sug',[{name:'更新前の目的地',address:'登録住所'}],'none'));
+ const before=await page.evaluate(()=>JSON.stringify(loadFavorites()));
+ expect(before).toContain('更新前の保存');
+ // Replace server tree in place; the browser origin and storage remain unchanged.
+ fs.cpSync(process.cwd(),process.env.UPGRADE_WEBROOT,{recursive:true,filter:src=>!['.git','node_modules','playwright-report','test-results'].includes(path.basename(src))});
+ // The real update action reloads the document. Observe navigation before clicking,
+ // then inspect the NEW document, rather than evaluating inside a disappearing context.
+ await Promise.all([
+  page.waitForEvent('framenavigated',{predicate:frame=>frame===page.mainFrame(),timeout:60000}),
+  page.locator('#pwaUpdateButton').click()
+ ]);
+ await page.waitForLoadState('domcontentloaded');
+ await page.waitForFunction(()=>document.documentElement.dataset.appBuild==="9"&&window.MICHI_APP_BUILD==="9"&&window.MICHI_PWA_BUILD==="9"&&!document.body.classList.contains('pwa-starting'),{},{timeout:60000});
+ await expect.poll(()=>page.evaluate(async()=> (await caches.keys()).includes('michinotochu-rebuilt-pwa-9')),{timeout:60000}).toBe(true);
+ await expect.poll(()=>page.evaluate(async()=> !(await caches.keys()).includes('michinotochu-rebuilt-pwa-8')),{timeout:60000}).toBe(true);
+ await expect(page.locator('#footerVersion')).toContainText('PWA 9 / DB 2',{timeout:60000});
+ expect(await page.evaluate(()=>JSON.stringify(loadFavorites()))).toBe(before);
+ await expect(page.locator('#currentDestinationName')).toHaveText('更新前の目的地');
+ expect(await page.evaluate(()=>tripCardSnapshot().estimatedKm)).toBeNull();
+ await page.evaluate(()=>{showView('sug');setOrigin('sug',34.3992388,132.4406034,'広島');document.getElementById('sugRadiusFree').value='80';});
+ await page.locator('#sug .action-main').click();await expect(page.locator('#sugResult .goal')).toBeVisible({timeout:60000});
+ await expect(page.locator("#sugResult .navigation-mission")).toHaveCount(1);
+ await expect(page.locator("#currentDestinationName")).not.toHaveText("未設定");
+ await expect(page.locator("#currentDestinationMission")).not.toBeEmpty();
+ await page.evaluate(()=>{showView("dest");setOrigin("dest",34.3992388,132.4406034,"広島");document.getElementById("destDistFree").value="80";document.getElementById("destTolFree").value="10";});
+ await page.locator("#dest .action-main").click();await expect(page.locator("#destResult .spot-card")).toBeVisible({timeout:60000});
+ await expect(page.locator("#destResult .navigation-mission")).toHaveCount(1);
+ await expect(page.locator("#currentDestinationName")).toHaveText(await page.locator("#destResult .spot-card h3").innerText());
+ expect(await page.evaluate(()=>[document.documentElement.dataset.appBuild,window.MICHI_APP_BUILD,window.MICHI_PWA_BUILD])).toEqual(["9","9","9"]);
+ await expect(page.locator("#buildMismatch")).toBeHidden();
+});

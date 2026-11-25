@@ -697,3 +697,7 @@ body.pwa-starting .shell,body.pwa-starting .topbar,body.pwa-starting footer{poin
 .current-destination-hint{display:block;font-size:11px;color:#66786d;margin-top:5px}
 body.pwa-starting .current-destination-header{pointer-events:none}
 @media(min-width:761px){.side{height:calc(100vh - 60px)}}
+
+/* Ver9 local travel card preview */
+.current-trip-card-button{display:block;width:100%;margin-top:8px;border:1px solid #b8d0c1;border-radius:8px;background:#f4f8f4;color:#244b3f;font:inherit;font-weight:700;min-height:42px;cursor:pointer}
+.trip-card-dialog{max-width:850px;margin:auto}.trip-card-dialog h2{margin:0 0 6px}.trip-card-formats,.trip-card-actions{display:flex;gap:8px;margin:10px 0}.trip-card-formats button,.trip-card-actions button{flex:1;min-width:0;min-height:44px;border:1px solid #c4d5c9;border-radius:9px;background:#f1f5ef;color:#244b3f;font:inherit;font-weight:700;cursor:pointer}.trip-card-formats button[aria-pressed=true],.trip-card-actions button:first-child{background:#315d4d;color:white}.trip-card-actions button:disabled{opacity:.48;cursor:default}.trip-card-dialog canvas{display:block;width:auto;height:auto;max-width:100%;max-height:55vh;margin:auto;border:1px solid #d9ded5;border-radius:6px}.trip-card-dialog #tripCardStatus{font-size:12px;color:#576c61;margin:8px 0}
