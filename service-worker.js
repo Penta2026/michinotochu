@@ -1,11 +1,11 @@
-/* 道の途中。PWAキャッシュ (9) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (10) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "9";
+const VERSION = "10";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
   "./index.html", "./style.css?v="+VERSION, "./app.js?v="+VERSION, "./detour-enhancements.js",
-  "./pwa.js?v="+VERSION, "./trip-card.js?v="+VERSION, "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
+  "./pwa.js?v="+VERSION, "./trip-card.js?v="+VERSION, "./trip-card-template.webp?v="+VERSION, "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
   "./data/app_data.js", "./data/riders_cafes.js", "./data/spot_overrides.js",
   "./data/road_summaries_chugoku.js", "./data/road_summaries_shikoku.js",
   "./data/road_summaries_kyushu_okinawa.js", "./data/road_summaries_kinki.js",
@@ -74,7 +74,7 @@ self.addEventListener("fetch", event => {
   }
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const critical=/\/(app\.js|pwa\.js|style\.css|trip-card\.js)$/.test(url.pathname);
+    const critical=/\/(app\.js|pwa\.js|style\.css|trip-card\.js|trip-card-template\.webp)$/.test(url.pathname);
     // Never substitute a different release's critical script or stylesheet.
     const cached = await cache.match(request, {ignoreSearch: !critical});
     if (cached) return cached;

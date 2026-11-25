@@ -1,7 +1,7 @@
 /* Travel card: entirely local Canvas artwork; no remote assets or trip upload. */
 (function(){
 "use strict";
-const BUILD="9";
+const BUILD="10";
 const palettes={
  road:{label:"道の駅",sky:"#dce9df",far:"#adc1b2",mid:"#819e85",near:"#4b7560",ground:"#a9b88c",accent:"#47745d"},
  sea:{label:"海",sky:"#d8edf0",far:"#a5c8cc",mid:"#72a8ad",near:"#427982",ground:"#a2b7a5",accent:"#397d87"},
@@ -48,75 +48,96 @@ function icon(c,key,x,y,size,color=ink){c.save();c.translate(x,y);c.scale(size/4
  else if(key==="detour"){path(c,[[24,43],[24,22],[8,6]],null,color,4);path(c,[[24,22],[40,6]],null,color,4);path(c,[[8,17],[8,6],[19,6]],null,color,3);path(c,[[29,6],[40,6],[40,17]],null,color,3);}
  else{c.beginPath();c.moveTo(24,44);c.bezierCurveTo(4,25,2,19,9,9);c.bezierCurveTo(17,-1,32,-1,39,9);c.bezierCurveTo(46,19,44,25,24,44);c.stroke();circle(c,24,16,6,null,color,2.5);}
  c.restore();}
-function bike(c,x,y,scale){c.save();c.translate(x,y);c.scale(scale,scale);const dark="#253e3b",tire="#263937",metal="#d4d9cb";
- for(const [wx,wy] of [[38,100],[160,100]]){circle(c,wx,wy,28,tire);circle(c,wx,wy,19,"#879a90");circle(c,wx,wy,14,dark);circle(c,wx,wy,4,metal);for(let i=0;i<6;i++){const a=i*Math.PI/3;path(c,[[wx,wy],[wx+18*Math.cos(a),wy+18*Math.sin(a)]],null,"#a8b7aa",1.3);}}
- path(c,[[38,100],[71,62],[104,98],[38,100],[94,48],[132,55],[104,98],[160,100],[142,39]],null,dark,7);
- path(c,[[152,100],[135,43],[149,35]],null,"#526b62",6);
- rect(c,78,72,34,28,5,dark);rect(c,82,77,24,17,3,"#74877b");path(c,[[47,71],[58,48],[97,43],[115,55],[95,69],[72,65]],dark);
- rect(c,36,44,48,10,4,dark);rect(c,16,28,39,28,4,dark);rect(c,20,31,31,8,2,"#657e70");
- path(c,[[136,39],[149,30],[160,33]],null,dark,4);circle(c,149,46,8,"#f3dfb5",dark,2);path(c,[[145,32],[139,15],[130,15]],null,dark,3);
- path(c,[[27,104],[8,114]],null,dark,3);c.restore();}
-function scenery(c,x,y,w,h,key){
- const p=palettes[key];c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.translate(x,y);c.scale(w/1000,h/540);
- let grad=c.createLinearGradient(0,0,0,540);grad.addColorStop(0,p.sky);grad.addColorStop(1,"#f5ead4");c.fillStyle=grad;c.fillRect(0,0,1000,540);circle(c,760,105,46,"#f8edd3");
- const ridges=[[0,265],[120,180],[230,235],[340,120],[465,224],[550,153],[660,240],[790,145],[1000,230],[1000,540],[0,540]];
- path(c,ridges,p.far);
- path(c,[[0,315],[100,243],[230,300],[360,215],[465,267],[560,220],[720,310],[830,237],[1000,296],[1000,540],[0,540]],p.mid);
- if(key==="sea"){c.fillStyle="#82b3b6";c.fillRect(0,291,1000,249);path(c,[[0,310],[210,301],[330,313],[520,304],[730,312],[1000,301]],null,"#e0eee5",3);for(let i=0;i<9;i++){const yy=330+i*17;path(c,[[460+(i%3)*40,yy],[875+(i%2)*70,yy]],null,"#b8d5d1",2);} }
- else{path(c,[[0,320],[180,282],[350,349],[560,270],[780,320],[1000,265],[1000,540],[0,540]],p.near);}
- path(c,[[0,385],[160,330],[320,375],[470,345],[620,407],[820,365],[1000,395],[1000,540],[0,540]],p.ground);
- if(key==="road"||key==="cafe"||key==="spot"){
-  const bx=key==="cafe"?650:704,by=343;rect(c,bx,by-65,134,76,2,"#e9e3d0");path(c,[[bx-13,by-65],[bx+60,by-110],[bx+147,by-65]],p.near);
-  rect(c,bx+13,by-50,32,29,2,"#86a5a0");rect(c,bx+59,by-50,30,62,2,"#6e877b");rect(c,bx+101,by-50,22,29,2,"#86a5a0");
+// Shared image template. All labels and selected icons remain live Canvas content.
+const TEMPLATE_URL="trip-card-template.webp?v=10";
+let template=null,loading=null;
+function ready(){
+ if(template)return Promise.resolve(template);
+ if(loading)return loading;
+ loading=new Promise((resolve,reject)=>{
+  const image=new Image();
+  image.onload=()=>{if(image.naturalWidth!==1080||image.naturalHeight!==1350){loading=null;reject(Error("旅カード画像のサイズが不正です"));return;}template=image;resolve(image);};
+  image.onerror=()=>{loading=null;reject(Error("旅カードの背景画像を読み込めません。通信状態を確認し、アプリを更新してください。"));};
+  image.src=TEMPLATE_URL;
+ });
+ return loading;
+}
+function field(c,value,x,y,w,h,maxLines,preferred,min,weight,color,align="left"){
+ const f=fit(c,value,w,maxLines,preferred,min,weight);
+ const rowH=f.size*1.20,top=y+Math.max(0,(h-f.rows.length*rowH)/2);
+ c.save();c.beginPath();c.rect(x,y,w,h);c.clip();
+ for(let i=0;i<f.rows.length;i++){
+  font(c,f.size,weight);
+  const xx=align==="center"?x+(w-c.measureText(f.rows[i]).width)/2:x;
+  txt(c,f.rows[i],xx,top+i*rowH,f.size,color,weight);
  }
- // A winding road, kept entirely generic and free of location names.
- c.beginPath();c.moveTo(0,540);c.bezierCurveTo(280,450,545,458,568,397);c.bezierCurveTo(588,351,440,340,450,309);c.lineTo(474,309);c.bezierCurveTo(457,340,642,352,634,407);c.bezierCurveTo(625,472,410,485,250,540);c.closePath();c.fillStyle="#eae5d5";c.fill();
- c.beginPath();c.moveTo(124,540);c.bezierCurveTo(340,473,575,461,603,403);c.bezierCurveTo(615,354,450,344,462,311);c.strokeStyle="#b4b6a5";c.lineWidth=3;c.setLineDash([15,11]);c.stroke();c.setLineDash([]);
- for(let i=0;i<12;i++){const xx=38+i*26,yy=401-i*1.1;path(c,[[xx,yy],[xx-5,yy-14],[xx,yy-10],[xx+5,yy-21]],null,p.near,2);}
- for(const [xx,yy,k] of [[25,385,1.3],[62,371,1],[930,390,1.2],[978,370,1.4]]){path(c,[[xx,yy-55*k],[xx-22*k,yy-5],[xx-10*k,yy-5],[xx-26*k,yy+12],[xx+26*k,yy+12],[xx+10*k,yy-5],[xx+22*k,yy-5]],p.near);}
- bike(c,100,365,1.25);c.restore();}
+ c.restore();
+}
+function viaField(c,via,x,y,w,h){
+ if(!via.length)return;
+ // No circles, arrows, or pre-printed placeholders: names only in visit order.
+ // Two columns, row-major order for 3–5 stops; full width for 1–2 stops.
+ const cols=via.length>=3?2:1,rows=Math.ceil(via.length/cols),gap=16,cw=(w-(cols-1)*gap)/cols,rh=h/rows;
+ via.forEach((name,i)=>field(c,name,x+(i%cols)*(cw+gap),y+Math.floor(i/cols)*rh,cw,rh,2,via.length>=3?20:25,14,600,ink));
+}
+function drawPortrait(c,data,g,key,via,mission,hasDistance){
+ c.save();c.scale(1080/1100,1350/1375);
+ c.drawImage(template,0,0,1100,1375);
+ // Mask the original illustration inside the badge while retaining its double outline.
+ path(c,[[150,320],[257,382],[257,535],[150,593],[42,535],[42,382]],"#f6f1df");
+ icon(c,key,94,378,112,palettes[key].accent);
+ field(c,palettes[key].label,50,506,200,49,2,29,22,700,ink,"center");
+ // Name / address / description use the existing printed, empty boxes.
+ field(c,g.name||"名称未登録",428,337,585,72,2,49,26,700,"#fffdf3","center");
+ field(c,g.address||"住所未登録",432,434,590,44,2,26,17,600,ink);
+ if(g.summary)field(c,g.summary,432,523,607,90,4,25,17,400,ink);
+ viaField(c,via,432,661,607,92);
+ // The fixed compass in the source artwork is covered, then replaced with the actual mission icon.
+ path(c,[[708,800],[809,800],[784,864],[700,864],[689,855],[689,838]],"#144b32");
+ if(mission)icon(c,data.mission,714,807,51,"#fffdf3");
+ if(hasDistance){
+  txt(c,"推定走行距離",434,806,16,ink,600);
+  field(c,"約 "+data.estimatedKm.toFixed(1)+" km",420,824,222,37,1,29,18,700,ink,"center");
+ }
+ if(mission){
+  txt(c,"追加ミッション",819,805,16,muted,600);
+  field(c,mission,808,824,237,37,1,30,20,700,ink,"center");
+ }
+ c.restore();
+}
+function drawWide(c,data,g,key,via,mission,hasDistance){
+ const w=1920,h=1080;
+ c.fillStyle="#f8f4e8";c.fillRect(0,0,w,h);
+ // Reuse the same photograph-like mountain artwork, cropped only from the scenic area.
+ c.save();c.beginPath();c.rect(0,659,w,421);c.clip();
+ const sy=875/1375*template.naturalHeight,sh=template.naturalHeight-sy;
+ const dh=w/template.naturalWidth*sh;
+ c.drawImage(template,0,sy,template.naturalWidth,sh,0,h-dh,w,dh);c.restore();
+ // Title from the template is reused verbatim, without baking in any destination details.
+ c.drawImage(template,205/1100*1080,65/1375*1350,650/1100*1080,230/1375*1350,50,20,650,230);
+ const hx=156,hy=363;
+ path(c,[[hx,hy-119],[hx+101,hy-60],[hx+101,hy+60],[hx,hy+119],[hx-101,hy+60],[hx-101,hy-60]],"#f5f1df","#28563e",7);
+ path(c,[[hx,hy-106],[hx+90,hy-53],[hx+90,hy+53],[hx,hy+106],[hx-90,hy+53],[hx-90,hy-53]],null,"#9eae83",2);
+ icon(c,key,hx-46,hy-76,92,palettes[key].accent);
+ field(c,palettes[key].label,hx-84,hy+24,168,58,2,28,20,700,ink,"center");
+ const x=310,ww=1545;
+ rect(c,x,259,ww,94,12,"#10482f");field(c,g.name||"名称未登録",x+24,264,ww-48,84,2,70,34,700,"#fffdf3");
+ rect(c,x,369,ww,58,9,"#d3ddc7");field(c,g.address||"住所未登録",x+22,373,ww-44,50,2,32,22,600,ink);
+ if(g.summary){rect(c,x,441,ww,93,9,"#f0ebd9");field(c,g.summary,x+22,445,ww-44,85,3,30,20,400,ink);}
+ if(via.length){txt(c,"経由地",x,548,23,muted,700);viaField(c,via,x+118,542,ww-118,100);}
+ // Dark bottom bar over the shared artwork with live distance and mission.
+ rect(c,62,925,1796,115,15,"#f7f3e9f5");
+ if(hasDistance){txt(c,"推定走行距離",100,945,23,muted,600);txt(c,"約 "+data.estimatedKm.toFixed(1)+" km",100,977,43,ink,700);}
+ if(mission){const mx=hasDistance?1030:100;icon(c,data.mission,mx,950,69,ink);txt(c,"追加ミッション",mx+95,944,23,muted,600);txt(c,mission,mx+95,977,43,ink,700);}
+}
 function draw(canvas,data,format){
- const tall=format!=="wide",w=tall?1080:1920,h=tall?1350:1080;
- canvas.width=w;canvas.height=h;const c=canvas.getContext("2d");if(!c)throw Error("Canvas unavailable");
- const g=data.goal||{},key=theme(g),p=palettes[key],via=Array.isArray(data.via)?data.via.slice(0,5):[];
- c.fillStyle=paper;c.fillRect(0,0,w,h);
- const m=48;
- if(tall){
-  txt(c,"道の途中。",m,37,64,ink,700,serif);txt(c,"さあ、どこへ行こう",m,120,27,muted,500);
-  txt(c,"M I C H I  N O  T O C H U",660,120,17,muted,600);
-  scenery(c,0,177,w,via.length?315:478,key);
- }else{
-  scenery(c,0,0,800,h,key);
-  rect(c,38,38,720,175,12,"#f9f6edee");txt(c,"道の途中。",69,62,68,ink,700,serif);txt(c,"さあ、どこへ行こう",73,149,28,muted);
- }
- const x=tall?m:850,ww=tall?w-2*m:1020;
- let y=tall?(via.length?520:686):58;
- icon(c,key,x,y,46,p.accent);txt(c,p.label,x+62,y+8,29,p.accent,700);
- y+=62;txt(c,"今回の目的地",x,y,25,muted,600);y+=37;
- y+=block(c,g.name||"名称未登録",x,y,ww,2,tall?(via.length?50:62):72,30,700)+10;
- y+=block(c,g.address||"住所未登録",x,y,ww,2,tall&&via.length?25:30,20,500,muted)+12;
- const footerY=tall?1166:888;
- const viaReserve=via.length?13+34+Math.ceil(via.length/(via.length>2?2:1))*55+4:0;
- const summaryRoom=footerY-28-y-viaReserve;
- if(g.summary&&summaryRoom>=35){const lines=Math.max(1,Math.min(3,Math.floor((summaryRoom-10)/36)));y+=block(c,g.summary,x,y,ww,lines,27,20,400,muted)+10;}
- if(via.length){
-  rule(c,x,y,ww);y+=13;txt(c,"経由地",x,y,23,muted,700);y+=34;
-  // Retain all via stops, even with five long names. Compact two-column layout on both sizes.
-  const cols=via.length>2?2:1,gap=18,cw=(ww-(cols-1)*gap)/cols;
-  let rowY=y;
-  for(let i=0;i<via.length;i++){
-   const col=i%cols;if(col===0&&i>0)rowY+=55;
-   const xx=x+col*(cw+gap);circle(c,xx+16,rowY+16,15,p.accent);txt(c,String(i+1),xx+9,rowY+5,21,"#fff",700);
-   block(c,via[i],xx+40,rowY,cw-42,2,23,16,500,ink);
-  }
-  y=rowY+57;
- }
- // Keep the bottom band independent of optional summary/via information.
- rule(c,x,footerY-12,ww);
- const hasDistance=Number.isFinite(data.estimatedKm)&&data.estimatedKm>=0,mission=missions[data.mission];
- if(hasDistance){txt(c,"推定走行距離",x,footerY+7,23,muted,600);txt(c,"約 "+data.estimatedKm.toFixed(1)+" km",x,footerY+47,43,ink,700);}
- if(mission){const bx=hasDistance?x+ww*.51:x,bw=hasDistance?ww*.49:ww;rect(c,bx,footerY,bw,105,15,"#e6ece2");icon(c,data.mission,bx+20,footerY+25,53,ink);txt(c,"追加ミッション",bx+88,footerY+14,21,muted,600);txt(c,mission,bx+88,footerY+48,36,ink,700);}
- txt(c,"目的地に行くためじゃない。走ることを楽しむために。",x,tall?1301:1031,21,muted,500);
+ if(!template)throw Error("旅カード画像の読み込みが完了していません");
+ const tall=format!=="wide";canvas.width=tall?1080:1920;canvas.height=tall?1350:1080;
+ const c=canvas.getContext("2d");if(!c)throw Error("Canvas unavailable");
+ const g=data.goal||{},key=theme(g),via=Array.isArray(data.via)?data.via.slice(0,5):[];
+ const mission=Object.prototype.hasOwnProperty.call(missions,data.mission)?missions[data.mission]:null;
+ const hasDistance=Number.isFinite(data.estimatedKm)&&data.estimatedKm>=0;
+ if(tall)drawPortrait(c,data,g,key,via,mission,hasDistance);else drawWide(c,data,g,key,via,mission,hasDistance);
  return canvas;
 }
 function open(data,modal){
@@ -125,15 +146,15 @@ function open(data,modal){
  function filename(){return "道の途中_"+String(data.goal.name||"旅").replace(/[\\/:*?"<>|]/g,"_").slice(0,60)+"_"+(format==="wide"?"1920x1080":"1080x1350")+".png";}
  function file(){return new File([blob],filename(),{type:"image/png"});}
  function canShare(){try{return !!(navigator.share&&navigator.canShare&&navigator.canShare({files:[file()]}));}catch(_){return false;}}
- function refresh(f){
+ async function refresh(f){
   format=f;const ticket=++seq;blob=null;save.disabled=share.disabled=true;el("tripCardTall").setAttribute("aria-pressed",String(f==="tall"));el("tripCardWide").setAttribute("aria-pressed",String(f==="wide"));
   status.textContent="画像を生成中…";
-  try{draw(canvas,data,f);canvas.toBlob(b=>{if(ticket!==seq||!canvas.isConnected)return;if(!b){status.textContent="画像を作成できませんでした。";return;}blob=b;save.disabled=false;share.disabled=!canShare();status.textContent=canvas.width+" × "+canvas.height+" px"+(share.disabled?" ／ 画像保存からSNSに投稿できます":"");},"image/png");}catch(e){status.textContent="画像を作成できませんでした："+e.message;}
+  try{await ready();if(ticket!==seq||!canvas.isConnected)return;draw(canvas,data,f);canvas.toBlob(b=>{if(ticket!==seq||!canvas.isConnected)return;if(!b){status.textContent="画像を作成できませんでした。";return;}blob=b;save.disabled=false;share.disabled=!canShare();status.textContent=canvas.width+" × "+canvas.height+" px"+(share.disabled?" ／ 画像保存からSNSに投稿できます":"");},"image/png");}catch(e){status.textContent="画像を作成できませんでした："+e.message;}
  }
  el("tripCardTall").onclick=()=>refresh("tall");el("tripCardWide").onclick=()=>refresh("wide");
  save.onclick=()=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename();document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);};
  share.onclick=async()=>{if(!blob||!canShare())return;try{await navigator.share({files:[file()],title:"道の途中。"});}catch(e){if(e.name!=="AbortError")status.textContent="共有できませんでした。PNG保存をご利用ください。";}};
  refresh("tall");
 }
-window.TripCard=Object.freeze({build:BUILD,draw,open,theme});
+window.TripCard=Object.freeze({build:BUILD,draw,open,theme,ready});
 })();
