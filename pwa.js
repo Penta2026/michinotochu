@@ -4,7 +4,7 @@
  * 端末内のお気に入り・旅の履歴は自動的に共有されない。
  */
 "use strict";
-const PWA_APP_VERSION = "9";
+const PWA_APP_VERSION = "10";
 const PWA_DEFAULT_DB_VERSION = "2";
 window.MICHI_PWA_BUILD=PWA_APP_VERSION;
 const PWA_HOSTED = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";

@@ -1,6 +1,6 @@
-/* 道の途中。PWAキャッシュ (9) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (10) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "9";
+const VERSION = "10";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
@@ -14,7 +14,7 @@ const CORE_FILES = [
   "./data/road_summaries_final.js",
   "./assets/home/home_sprite_0.js", "./assets/home/home_sprite_1.js",
   "./assets/home/home_sprite_2.js", "./assets/home/home_sprite_3.js",
-  "./icons/icon-192.png", "./icons/icon-512.png"
+  "./icons/icon-192.png", "./icons/icon-512.png", "./assets/trip-card-detour.jpg"
 ];
 const OPTIONAL_FILES = [
   "./", "./history.html", "./privacy.html", "./terms.html", "./legal.html",
