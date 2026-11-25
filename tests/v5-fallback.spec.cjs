@@ -40,3 +40,13 @@ test('stalled shared land data reports timeout and retries in both modes',async(
  await page.evaluate(()=>window.fetch=window.__realDrawFetch);
  await page.locator('#sug .action-main').click();await expect(page.locator('#sugResult .goal')).toBeVisible({timeout:60000});
 });
+
+test('four draw setup screens omit the requested explanatory notes',async({page})=>{
+ await page.goto('http://127.0.0.1:8765/');
+ await page.waitForFunction(()=>typeof runSugoroku==='function'&&!document.body.classList.contains('pwa-starting'));
+ for(const [id,note] of [['sug','ゴールはアプリがランダムに決定'],['dest','指定距離±許容幅を推定走行距離で判定します'],['ride','登録候補は推定走行距離帯で判定します'],['season','推定走行距離が指定上限以内の季節スポットを近い順に最大12件表示します']]){
+  await page.evaluate(id=>showView(id),id);
+  await expect(page.locator('#'+id)).not.toContainText(note);
+  await expect(page.locator('#'+id+' .action-main')).toBeVisible();
+ }
+});

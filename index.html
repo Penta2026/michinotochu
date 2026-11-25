@@ -80,7 +80,7 @@
     <div class="choice-section"><h3>🏍️ 排気量</h3><label><select id="sugVehicle"><option value="50">50cc</option><option value="125" selected>51～125cc</option><option value="126">126cc以上</option></select></label><div id="sugLandStatus" class="meta" aria-live="polite"></div></div><div class="choice-section"><h3>📏 指定走行距離（上限）</h3><select id="sugRadius" class="logic-control"><option selected>50</option><option>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="sugRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="sugRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>🎯 道の駅数の上限（ゴール込み）</h3><select id="sugCount" class="logic-control"><option value="0" selected>ランダム</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select><div class="choice-grid" data-target="sugCount" data-values="0,1,2,3,4,5,6" data-labels="ランダム,1,2,3,4,5,6"></div></div>
     <div class="choice-section"><h3>🎁 ミッション</h3><input type="checkbox" id="sugMission" checked class="logic-control"><div class="toggle-choice"><button data-mission="on" class="active">あり</button><button data-mission="off">なし</button></div></div>
-    <div class="note">※ ゴールはアプリがランダムに決定。途中の道の駅はゴール方向±45°以内から選びます。駅が足りない場合はある駅だけを表示します。<br>※ 指定走行距離は経由地込みの推定値です。未登録の橋・トンネルを通る候補は除外します。実際の走行距離はナビで確認してください。</div><button class="primary action-main" onclick="runSugoroku()">🎲 すごろく開始！</button>
+    <button class="primary action-main" onclick="runSugoroku()">🎲 すごろく開始！</button>
     <div id="sugResult" class="result empty">条件を設定してください。</div>
   </div></div></section>
 
@@ -90,7 +90,7 @@
     <div class="choice-section"><h3>📏 目的地までの目安走行距離</h3><select id="destDist" class="logic-control"><option>10</option><option>20</option><option selected>30</option><option>50</option><option>80</option><option>100</option><option>150</option><option>200</option><option>300</option></select><div class="choice-grid" data-target="destDist" data-values="10,20,30,50,80,100,150,200,300"></div><div class="free-number"><input id="destDistFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>↔ 距離の許容幅（±）</h3><select id="destTol" class="logic-control"><option>5</option><option selected>10</option><option>20</option><option>30</option></select><div class="choice-grid" data-target="destTol" data-values="5,10,20,30"></div><div class="free-number"><input id="destTolFree" type="number" min="1" max="500" placeholder="自由入力"><span>km</span></div></div>
     <div class="choice-section"><h3>✨ 雰囲気</h3><select id="destMood" class="logic-control"><option>なんでも</option><option>海</option><option>山</option><option>田舎</option><option>市街地</option><option>ランドマーク</option><option>ライダーズカフェ</option></select><div class="choice-grid" data-target="destMood" data-values="なんでも,海,山,田舎,市街地,ランドマーク,ライダーズカフェ" data-labels="✨ なんでも,🌊 海,⛰ 山,🌾 田舎,🏙 市街地,📍 ランドマーク,🏍️ ライダーズカフェ"></div></div>
-    <div class="note">※ 指定距離±許容幅を推定走行距離で判定します。未登録の橋・トンネルやフェリーを使う候補は除外します。実際の道路距離はナビで確認してください。</div><button class="primary action-main" onclick="runDestination()">🎲 行先ガチャ！</button>
+    <button class="primary action-main" onclick="runDestination()">🎲 行先ガチャ！</button>
     <div id="destResult" class="result empty">条件を設定してください。</div>
   </div></div></section>
 
@@ -214,7 +214,7 @@
       <div class="ride-direction-note">方角はだいたい±30°。おまかせは毎回ランダムな方向を選びます。</div>
     </div>
 
-    <div class="note">※ 登録候補は推定走行距離帯で判定します。未登録の海越え・フェリーは除外します。Google Mapsのエリア検索は位置の目安です。距離・気分・方角は次回も保持されます。</div>
+    
     <button class="primary action-main" type="button" onclick="runRideStyle()">✨ この感じで探す！</button>
     <div id="rideResult" class="result empty">スタート地点と今日の気分を選んでください。</div>
   </div>
@@ -225,7 +225,7 @@
   <div class="screen-body"><div id="seasonStart"></div><div class="choice-section"><h3>🏍️ 排気量</h3><label><select id="seasonVehicle"><option value="50">50cc</option><option value="125" selected>51～125cc</option><option value="126">126cc以上</option></select></label><div id="seasonLandStatus" class="meta" aria-live="polite"></div></div>
     <div class="choice-section"><h3>🌼 どの季節の景色を探す？</h3><select id="seasonSelect" class="logic-control"><option value="auto">今の季節（自動）</option><option>春</option><option>夏</option><option>秋</option><option>冬</option></select><div class="choice-grid season-grid" data-target="seasonSelect" data-values="auto,春,夏,秋,冬" data-labels="今の季節（自動）,🌸 春,☀ 夏,🍁 秋,❄ 冬"></div></div>
     <div class="choice-section"><h3>📏 指定走行距離（上限）</h3><select id="seasonRadius" class="logic-control"><option>50</option><option selected>100</option><option>150</option><option>200</option><option>300</option><option>500</option></select><div class="choice-grid" data-target="seasonRadius" data-values="50,100,150,200,300,500"></div><div class="free-number"><input id="seasonRadiusFree" type="number" min="1" max="2000" placeholder="自由入力"><span>km</span></div></div>
-    <div class="note">※ 推定走行距離が指定上限以内の季節スポットを近い順に最大12件表示します。未登録の海越え・フェリーは除外します。実際の道路距離はナビで確認してください。</div><button class="primary action-main" onclick="runSeason()">✨ この条件で季節の候補を見る</button><div id="seasonResult" class="spot-grid"></div>
+    <button class="primary action-main" onclick="runSeason()">✨ この条件で季節の候補を見る</button><div id="seasonResult" class="spot-grid"></div>
   </div></div></section>
 
 <section id="nearby" class="view"><div class="screen-card menu-nearby">
