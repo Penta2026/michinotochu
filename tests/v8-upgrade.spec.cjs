@@ -1,0 +1,31 @@
+const {test,expect}=require('@playwright/test');
+const fs=require('node:fs');
+const path=require('node:path');
+test('upgrade installed v7 to v8 without losing local storage',async({page})=>{
+ const base='http://127.0.0.1:8766/';
+ page.on('dialog',d=>d.accept());
+ await page.goto(base);
+ await page.waitForFunction(()=>!!navigator.serviceWorker.controller&&typeof saveFavorite==='function');
+ await page.evaluate(()=>saveFavorite({mode:'道の駅すごろく',title:'更新前の保存',origin:{lat:34.3992388,lng:132.4406034,label:'広島'},points:[{lat:34.433767,lng:132.703576,name:'西条'}]}));
+ const before=await page.evaluate(()=>JSON.stringify(loadFavorites()));
+ expect(before).toContain('更新前の保存');
+ // Replace server tree in place; the browser origin and storage remain unchanged.
+ fs.cpSync(process.cwd(),process.env.UPGRADE_WEBROOT,{recursive:true,filter:src=>!['.git','node_modules','playwright-report','test-results'].includes(path.basename(src))});
+ await page.evaluate(()=>updateEverything());
+ await expect.poll(()=>page.evaluate(async()=> (await caches.keys()).includes('michinotochu-rebuilt-pwa-8')),{timeout:60000}).toBe(true);
+ await expect.poll(()=>page.evaluate(async()=> !(await caches.keys()).includes('michinotochu-rebuilt-pwa-7')),{timeout:60000}).toBe(true);
+ await page.reload();
+ await expect(page.locator('#footerVersion')).toContainText('PWA 8 / DB 2',{timeout:60000});
+ expect(await page.evaluate(()=>JSON.stringify(loadFavorites()))).toBe(before);
+ await page.evaluate(()=>{showView('sug');setOrigin('sug',34.3992388,132.4406034,'広島');document.getElementById('sugRadiusFree').value='80';});
+ await page.locator('#sug .action-main').click();await expect(page.locator('#sugResult .goal')).toBeVisible({timeout:60000});
+ await expect(page.locator("#sugResult .navigation-mission")).toHaveCount(1);
+ await expect(page.locator("#currentDestinationName")).not.toHaveText("未設定");
+ await expect(page.locator("#currentDestinationMission")).not.toBeEmpty();
+ await page.evaluate(()=>{showView("dest");setOrigin("dest",34.3992388,132.4406034,"広島");document.getElementById("destDistFree").value="80";document.getElementById("destTolFree").value="10";});
+ await page.locator("#dest .action-main").click();await expect(page.locator("#destResult .spot-card")).toBeVisible({timeout:60000});
+ await expect(page.locator("#destResult .navigation-mission")).toHaveCount(1);
+ await expect(page.locator("#currentDestinationName")).toHaveText(await page.locator("#destResult .spot-card h3").innerText());
+ expect(await page.evaluate(()=>[document.documentElement.dataset.appBuild,window.MICHI_APP_BUILD,window.MICHI_PWA_BUILD])).toEqual(["8","8","8"]);
+ await expect(page.locator("#buildMismatch")).toBeHidden();
+});

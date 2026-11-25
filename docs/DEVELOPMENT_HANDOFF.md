@@ -108,3 +108,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver7 公開反映対象（2026-11-25）
 ユーザーより Ver7 current destination gate がグリーンとの報告あり。run ID・詳細ログは未取得。候補ブランチ current-destination-v7 と公開対象SHA 1b6e91a2cb78a0e31c071de07506ae24575e39c3 の一致、旧main ec698becbd878be54172c5bcb0d058d2167fbe6e からの差分を照合。旧mainを復旧基準とする。PWA7/DB2、B_Navi・地理DB・距離計算エンジン変更なし。GitHub Pages配信と実機の目的地欄・表示高さ・保存動作は別途確認。
+
+## Ver8 更新整合性対策（2026-11-25）
+ユーザー報告: Ver7で上部目的地と追加ミッションが反映されない。mainの両機能実装は確認済み。旧SWがナビゲーションをネットワーク優先、JSをignoreSearch付きキャッシュ優先で返すため新HTMLと旧JSが混在する構造を確認。実端末の原因は未確定。Ver8は重要JS/CSSの版付き完全一致キャッシュ、検証済み同一版HTMLをアプリ起動時に提供、SWインストール時にHTML/app/pwa版を照合、実行時マーカー不一致は抽選停止と更新案内。PWAの更新ボタンを明示。既存の目的地・ミッション・確率・DB・GPX・B_Naviは変更しない。Ver7→8実更新経由の両抽選・古いJS注入・オフライン整合性試験を既存回帰に追加。構文検査済み、Actions/実機未確認。旧main 3d88854685c557cf84ef8b969922474df9ac3c45 を復旧基準とする。

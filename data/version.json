@@ -1,9 +1,9 @@
 {
-  "appVersion": "7",
+  "appVersion": "8",
   "dbVersion": "2",
   "spots": 3763,
   "roadStations": 1234,
   "dataFile": "data/app_data.js",
   "updated": "2026-11-25",
-  "buildType": "PWA version 7"
+  "buildType": "PWA version 8"
 }

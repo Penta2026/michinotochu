@@ -1,11 +1,12 @@
-/* 道の途中。 v7
+/* 道の途中。 v8
  * HTTPS配信と専用localhostプレビューでService Workerを登録する。
  * 元のローカル開発版と同じURL・ポートで同時に動かさないこと。
  * 端末内のお気に入り・旅の履歴は自動的に共有されない。
  */
 "use strict";
-const PWA_APP_VERSION = "7";
+const PWA_APP_VERSION = "8";
 const PWA_DEFAULT_DB_VERSION = "2";
+window.MICHI_PWA_BUILD=PWA_APP_VERSION;
 const PWA_HOSTED = location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
 function pwaStoredDbVersion() { return PWA_DEFAULT_DB_VERSION; }
 function finishStartup() {
@@ -17,7 +18,9 @@ function setPwaStatus(message) {
   const status = document.getElementById("pwaDbStatus");
   if (status) status.textContent = message;
   const footer = document.getElementById("footerVersion");
-  if (footer) footer.textContent = `${PWA_HOSTED ? "PWA" : "LOCAL Web"} / PWA ${PWA_APP_VERSION} / DB ${PWA_DEFAULT_DB_VERSION}`;
+  const button=document.getElementById("pwaUpdateButton");
+  if(button&&PWA_HOSTED)button.textContent="📦 アプリを更新";
+  if (footer) footer.textContent = window.MICHI_APP_BUILD===PWA_APP_VERSION ? `${PWA_HOSTED ? "PWA" : "LOCAL Web"} / PWA ${PWA_APP_VERSION} / DB ${PWA_DEFAULT_DB_VERSION}` : "更新不一致：アプリを更新してください";
 }
 async function updateEverything() {
   if (!PWA_HOSTED) {

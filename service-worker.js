@@ -1,11 +1,11 @@
-/* 道の途中。PWAキャッシュ (7) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (8) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "7";
+const VERSION = "8";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
-  "./index.html", "./style.css", "./app.js", "./detour-enhancements.js",
-  "./pwa.js", "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
+  "./index.html", "./style.css?v="+VERSION, "./app.js?v="+VERSION, "./detour-enhancements.js",
+  "./pwa.js?v="+VERSION, "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js", "./budget-sugoroku.js", "./sugoroku-land-ui.js", "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
   "./data/app_data.js", "./data/riders_cafes.js", "./data/spot_overrides.js",
   "./data/road_summaries_chugoku.js", "./data/road_summaries_shikoku.js",
   "./data/road_summaries_kyushu_okinawa.js", "./data/road_summaries_kinki.js",
@@ -27,6 +27,9 @@ self.addEventListener("install", event => {
     const cache = await caches.open(CACHE_NAME);
     // 必須リソースが1つでも欠けた場合は古いSWを維持する。
     await cache.addAll(CORE_FILES.map(path => new Request(path, {cache: "reload"})));
+    // Avoid activating a partially published release (HTML and JS must agree).
+    const [html,app,pwa]=await Promise.all(["./index.html","./app.js?v="+VERSION,"./pwa.js?v="+VERSION].map(async path=>(await cache.match(path)).text()));
+    if(!html.includes('data-app-build="'+VERSION+'"')||!app.includes('window.MICHI_APP_BUILD="'+VERSION+'"')||!pwa.includes('PWA_APP_VERSION = "'+VERSION+'"'))throw Error("Release resources do not match");
     await Promise.allSettled(OPTIONAL_FILES.map(path => cache.add(new Request(path, {cache: "reload"}))));
     await self.skipWaiting();
   })());
@@ -53,6 +56,12 @@ self.addEventListener("fetch", event => {
   if (request.mode === "navigate") {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
+      const scopePath=new URL(self.registration.scope).pathname;
+      // The active worker serves its own validated app shell, including shared-map query URLs.
+      if(url.pathname===scopePath||url.pathname===scopePath+"index.html"){
+        const shell=await cache.match("./index.html");
+        if(shell)return shell;
+      }
       try {
         const response = await fetch(request, {cache: "no-store"});
         if (response.ok && response.type === "basic") await cache.put(request, response.clone());
@@ -65,8 +74,11 @@ self.addEventListener("fetch", event => {
   }
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request, {ignoreSearch: true});
+    const critical=/\/(app\.js|pwa\.js|style\.css)$/.test(url.pathname);
+    // Never substitute a different release's critical script or stylesheet.
+    const cached = await cache.match(request, {ignoreSearch: !critical});
     if (cached) return cached;
+    if(critical&&url.searchParams.get("v")!==VERSION)return Response.error();
     try {
       const response = await fetch(request);
       if (response.ok && response.type === "basic") cache.put(request, response.clone()).catch(() => {});
