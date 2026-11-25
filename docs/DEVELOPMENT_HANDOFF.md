@@ -111,3 +111,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver8 更新整合性対策（2026-11-25）
 ユーザー報告: Ver7で上部目的地と追加ミッションが反映されない。mainの両機能実装は確認済み。旧SWがナビゲーションをネットワーク優先、JSをignoreSearch付きキャッシュ優先で返すため新HTMLと旧JSが混在する構造を確認。実端末の原因は未確定。Ver8は重要JS/CSSの版付き完全一致キャッシュ、検証済み同一版HTMLをアプリ起動時に提供、SWインストール時にHTML/app/pwa版を照合、実行時マーカー不一致は抽選停止と更新案内。PWAの更新ボタンを明示。既存の目的地・ミッション・確率・DB・GPX・B_Naviは変更しない。Ver7→8実更新経由の両抽選・古いJS注入・オフライン整合性試験を既存回帰に追加。構文検査済み、Actions/実機未確認。旧main 3d88854685c557cf84ef8b969922474df9ac3c45 を復旧基準とする。
+
+## Ver8 更新試験の同期修正
+ユーザー提示のActionsログで15 passed / 1 failed（v8-upgrade.spec.cjs:15）を確認。updateEverything()が再読み込みした直後にpage.evaluateが旧実行コンテキスト消失で失敗。更新成功自体は未確認。実更新ボタンをクリックする前にmain frame navigationを監視し、DOMContentLoaded・HTML/app/pwa版一致・起動完了を待ってからキャッシュと保存内容と両抽選を検証する。追加の手動reloadは除去。合格基準を緩めず、アプリ本体変更なし。最新の再試験待ち。main/B_Navi未変更。

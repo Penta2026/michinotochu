@@ -11,10 +11,16 @@ test('upgrade installed v7 to v8 without losing local storage',async({page})=>{
  expect(before).toContain('更新前の保存');
  // Replace server tree in place; the browser origin and storage remain unchanged.
  fs.cpSync(process.cwd(),process.env.UPGRADE_WEBROOT,{recursive:true,filter:src=>!['.git','node_modules','playwright-report','test-results'].includes(path.basename(src))});
- await page.evaluate(()=>updateEverything());
+ // The real update action reloads the document. Observe navigation before clicking,
+ // then inspect the NEW document, rather than evaluating inside a disappearing context.
+ await Promise.all([
+  page.waitForEvent('framenavigated',{predicate:frame=>frame===page.mainFrame(),timeout:60000}),
+  page.locator('#pwaUpdateButton').click()
+ ]);
+ await page.waitForLoadState('domcontentloaded');
+ await page.waitForFunction(()=>document.documentElement.dataset.appBuild==="8"&&window.MICHI_APP_BUILD==="8"&&window.MICHI_PWA_BUILD==="8"&&!document.body.classList.contains('pwa-starting'),{},{timeout:60000});
  await expect.poll(()=>page.evaluate(async()=> (await caches.keys()).includes('michinotochu-rebuilt-pwa-8')),{timeout:60000}).toBe(true);
  await expect.poll(()=>page.evaluate(async()=> !(await caches.keys()).includes('michinotochu-rebuilt-pwa-7')),{timeout:60000}).toBe(true);
- await page.reload();
  await expect(page.locator('#footerVersion')).toContainText('PWA 8 / DB 2',{timeout:60000});
  expect(await page.evaluate(()=>JSON.stringify(loadFavorites()))).toBe(before);
  await page.evaluate(()=>{showView('sug');setOrigin('sug',34.3992388,132.4406034,'広島');document.getElementById('sugRadiusFree').value='80';});
