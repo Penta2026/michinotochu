@@ -114,3 +114,6 @@ Ver3 main 05fe09197d73649acc5be547184491e0843c1b8c から gacha-animation-v4 を
 
 ## Ver8 更新試験の同期修正
 ユーザー提示のActionsログで15 passed / 1 failed（v8-upgrade.spec.cjs:15）を確認。updateEverything()が再読み込みした直後にpage.evaluateが旧実行コンテキスト消失で失敗。更新成功自体は未確認。実更新ボタンをクリックする前にmain frame navigationを監視し、DOMContentLoaded・HTML/app/pwa版一致・起動完了を待ってからキャッシュと保存内容と両抽選を検証する。追加の手動reloadは除去。合格基準を緩めず、アプリ本体変更なし。最新の再試験待ち。main/B_Navi未変更。
+
+## Ver8 公開反映対象（2026-11-25）
+ユーザーより更新試験同期修正後の Ver8 consistent release gate がグリーンとの報告あり。再試験run ID・詳細ログ未取得。候補ブランチ consistent-release-v8 と公開対象SHA 6979fb281caac402229dc4d095068a727dd90c50 の一致、旧main 3d88854685c557cf84ef8b969922474df9ac3c45 からの差分を照合。旧mainを復旧基準とする。PWA8/DB2、B_Navi・地理DB・距離計算エンジン変更なし。Pages配信、実端末の新旧混在解消・追加ミッション・今の目的地の動作は別途確認。
