@@ -1,6 +1,6 @@
-/* 道の途中。PWAキャッシュ (6) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (7) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "6";
+const VERSION = "7";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [

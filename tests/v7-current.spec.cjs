@@ -1,0 +1,28 @@
+const {test,expect}=require('@playwright/test');
+test('compact current destination persists, progresses manually and replaces only on successful draw',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.emulateMedia({reducedMotion:'reduce'});page.on('dialog',d=>d.accept());
+ await page.goto('http://127.0.0.1:8765/');
+ await page.waitForFunction(()=>typeof setCurrentDestination==='function'&&!document.body.classList.contains('pwa-starting'));
+ await expect(page.locator('.topbar')).toHaveCount(0);
+ await expect(page.locator('#currentDestinationName')).toHaveText('未設定');
+ expect((await page.locator('.current-destination-header').boundingBox()).height).toBeLessThan(90);
+ await page.evaluate(()=>{showView('sug');setOrigin('sug',34.3992388,132.4406034,'広島試験');document.getElementById('sugRadiusFree').value='100';document.getElementById('sugCount').value='3';window.drawNavigationMission=()=> 'none';});
+ await page.locator('#sug .action-main').click();await expect(page.locator('#sugResult .goal')).toBeVisible({timeout:60000});
+ await expect(page.locator('#currentDestinationMission')).toContainText('ナビなし');
+ const first=await page.locator('#sugResult .route-line b').first().innerText();await expect(page.locator('#currentDestinationName')).toHaveText(first.replace(/^\d+\.\s*/,''));
+ await expect(page.locator('#currentDestinationAddress')).not.toBeEmpty();
+ await page.evaluate(()=>showView('home'));
+ await expect(page.locator('#currentDestinationPanel')).not.toHaveAttribute('open','');
+ await page.reload();await page.waitForFunction(()=>!document.body.classList.contains('pwa-starting'));
+ await expect(page.locator('#currentDestinationName')).toHaveText(first.replace(/^\d+\.\s*/,''));
+ await page.evaluate(()=>setCurrentDestination('sug',[{name:'地点A',address:'登録住所A'},{name:'地点B',prefecture:'広島県',municipality:'広島市'}],'none'));
+ await expect(page.locator('#currentDestinationAddress')).toHaveText('登録住所A');
+ await page.locator('#currentDestinationPanel summary').click();await expect(page.locator('.current-destination-stop')).toHaveCount(2);
+ await page.getByRole('button',{name:'到着・次の目的地へ'}).click();await expect(page.locator('#currentDestinationName')).toHaveText('地点B');await expect(page.locator('#currentDestinationAddress')).toHaveText('広島県広島市（詳細住所未登録）');
+ await page.reload();await page.waitForFunction(()=>!document.body.classList.contains('pwa-starting'));await expect(page.locator('#currentDestinationName')).toHaveText('地点B');
+ await page.evaluate(()=>{showView('dest');setOrigin('dest',34.3992388,132.4406034,'広島試験');document.getElementById('destDistFree').value='80';document.getElementById('destTolFree').value='10';});
+ await page.locator('#dest .action-main').click();await expect(page.locator('#destResult .spot-card')).toBeVisible({timeout:60000});
+ await expect(page.locator('#currentDestinationName')).toHaveText(await page.locator('#destResult .spot-card h3').innerText());
+ await page.locator('#currentDestinationPanel summary').click();await page.locator('.current-destination-actions').getByRole('button',{name:'クリア'}).click();
+ await expect(page.locator('#currentDestinationName')).toHaveText('未設定');
+});

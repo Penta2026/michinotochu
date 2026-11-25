@@ -667,3 +667,33 @@ body.pwa-starting .shell,body.pwa-starting .topbar,body.pwa-starting footer{poin
 .navigation-mission-name{display:block;font-size:1.35rem;line-height:1.5;margin:3px 0}
 .navigation-mission-detail{font-size:.88rem;line-height:1.5}
 .navigation-mission-note{font-size:.73rem;color:#50665d;margin-top:5px}
+
+/* Compact global destination header, replacing the old brand banner. */
+.current-destination-header{background:#f2f6f3;color:#244b3f;padding:8px max(12px,env(safe-area-inset-right)) 8px max(12px,env(safe-area-inset-left));padding-top:max(8px,env(safe-area-inset-top));border-bottom:1px solid #d7e2da}
+.current-destination{max-width:1100px;margin:auto;background:#fff;border:1px solid #d4e3d9;border-radius:12px;padding:0;overflow:hidden}
+.current-destination summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:minmax(0,1fr) 18px;gap:2px 8px;align-items:center;padding:8px 12px;line-height:1.35}
+.current-destination summary::-webkit-details-marker{display:none}
+.current-destination summary::after{content:"⌄";grid-column:2;grid-row:1/4;align-self:center;text-align:center;font-size:18px;color:#467762}
+.current-destination[open] summary::after{transform:rotate(180deg)}
+.current-destination-heading{grid-column:1;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px}
+#currentDestinationMission{font-weight:700;font-size:11px;color:#387660}
+#currentDestinationProgress{font-size:11px;color:#647c70;margin-left:auto}
+#currentDestinationName{grid-column:1;display:block;min-width:0;overflow-wrap:anywhere;font-size:16px;line-height:1.35}
+.current-destination-address{grid-column:1;font-size:12px;color:#526c60;overflow-wrap:anywhere}
+.current-destination-address[hidden]{display:none}
+.current-destination:not(.has-destination) summary{grid-template-columns:minmax(0,1fr) auto 18px;gap:8px}
+.current-destination:not(.has-destination) #currentDestinationName{grid-column:2;grid-row:1;font-size:12px;color:#7b8a81;font-weight:500}
+.current-destination:not(.has-destination) summary::after{grid-column:3;grid-row:1}
+.current-destination-details{border-top:1px solid #dce9df;padding:8px 12px;font-size:13px}
+.current-destination-details p{margin:2px 0}
+.current-destination-route{max-height:min(34vh,260px);overflow:auto}
+.current-destination-stop{display:grid;grid-template-columns:46px minmax(0,1fr);gap:5px;padding:6px 4px;border-bottom:1px solid #e5eee8;align-items:start}
+.current-destination-stop.current{background:#edf6ef;border-radius:7px}
+.current-destination-stop small{font-size:11px;color:#467762}
+.current-destination-stop span{display:block;font-size:12px;color:#526c60;overflow-wrap:anywhere}
+.current-destination-actions{display:flex;gap:8px;margin-top:8px}
+.current-destination-actions button{flex:1;border:1px solid #bfd5c7;border-radius:8px;padding:8px;font:inherit;font-weight:700;background:#e6f2ea;color:#244b3f;cursor:pointer;min-height:40px}
+.current-destination-actions button:last-child{flex:0 0 auto;background:#fff}
+.current-destination-hint{display:block;font-size:11px;color:#66786d;margin-top:5px}
+body.pwa-starting .current-destination-header{pointer-events:none}
+@media(min-width:761px){.side{height:calc(100vh - 60px)}}
