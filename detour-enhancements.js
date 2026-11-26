@@ -267,12 +267,15 @@ function cleanDetourPlaceName(value) {
   if (!name || /https?:|^loc:|^geo:|^-?\d+(?:\.\d+)?\s*,\s*-?\d|^\d{3}-\d{4}|^(?:Google\s*(?:Maps?|マップ)|Googleマップ共有地点|Googleマップ追加地点|地図|共有|場所|Dropped pin|ピンをドロップ)(?:$|[：:\s])/i.test(name)) return "";
   return Array.from(name).slice(0, 80).join("");
 }
-function detourNameFromMapUrl(value) {
+function detourNameFromMapUrl(value, depth = 0) {
+  if (depth > 3) return "";
   const link = firstUrl(value);
   if (!link) return "";
   try {
     const url = new URL(link);
     if (!/^((www|maps)\.)?google\.(com|co\.jp)$/.test(url.hostname)) return "";
+    // Parse the embedded original URL without following the access-check page.
+    if (/^\/sorry(?:\/|$)/i.test(url.pathname)) return detourNameFromMapUrl(url.searchParams.get("continue"), depth + 1);
     const place = url.pathname.match(/\/maps\/place\/([^/]+)/i);
     let name = place ? decodeURIComponent(place[1].replace(/\+/g, " ")) : "";
     if (!name && (url.searchParams.has("query_place_id") || url.searchParams.has("place_id"))) name = url.searchParams.get("query") || url.searchParams.get("q") || "";
@@ -289,7 +292,7 @@ function detourNameFromSharedText(value) {
 function detourResolvedPlaceName(value, resolved, title = "") {
   const r = resolved && resolved.ok ? resolved : {};
   return detourNameFromMapUrl(value) ||
-    [r.resolvedUrl,r.finalUrl,r.url,r.location,r.href].map(detourNameFromMapUrl).find(Boolean) ||
+    [r.resolvedUrl,r.finalUrl,r.url,r.location,r.href].map(v => detourNameFromMapUrl(v)).find(Boolean) ||
     [r.placeName,r.name].map(cleanDetourPlaceName).find(Boolean) ||
     cleanDetourPlaceName(title) || detourNameFromSharedText(value) ||
     cleanDetourPlaceName(r.title) || "";

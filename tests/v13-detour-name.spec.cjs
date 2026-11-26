@@ -7,6 +7,8 @@ test('map names from direct and expanded links, title and fallback',async({page}
   return [detourResolvedPlaceName(url),detourResolvedPlaceName(short,{ok:true,lat:33.96,lng:132.10,finalUrl:url}),detourResolvedPlaceName(short,{ok:true,placeName:'駅南公園'}),detourResolvedPlaceName(short,null,'駅南公園'),detourResolvedPlaceName('駅南公園\n'+short),detourResolvedPlaceName(short,{ok:true,lat:33.96,lng:132.10}),detourResolvedPlaceName('https://www.google.com/maps/place/33.96,132.10'),detourResolvedPlaceName('https://www.google.com/maps/search/?api=1&query=公園'),detourResolvedPlaceName(short,null,'Google Maps')];
  });
  expect(values).toEqual(['駅南公園','駅南公園','駅南公園','駅南公園','駅南公園','','','','']);
+ const wrapped=await page.evaluate(()=>detourResolvedPlaceName("https://maps.app.goo.gl/testfixture",{ok:true,lat:33.965293,lng:132.1036682,finalUrl:"https://www.google.com/sorry/index?continue="+encodeURIComponent("https://www.google.com/maps/place/%E9%A7%85%E5%8D%97%E5%85%AC%E5%9C%92/@33.966894,132.1062046,7207m/data=!3d33.965293!4d132.1036682")}));
+ expect(wrapped).toBe("駅南公園");
 });
 test('short link import retains resolver name in selected route and GPX, editable fallback',async({page})=>{
  page.on('dialog',d=>d.accept());
@@ -15,8 +17,8 @@ test('short link import retains resolver name in selected route and GPX, editabl
  await expect(page.locator('#detourCandidateLinkInput')).toBeVisible();
  await page.route('https://crimson-dust-53e2.yasutaka5262.workers.dev/**',async route=>{
   const url=new URL(route.request().url()).searchParams.get('url');
-  const named=url.includes('namedfixture');
-  await route.fulfill({json:named?{ok:true,lat:33.96,lng:132.10,finalUrl:'https://www.google.com/maps/place/%E9%A7%85%E5%8D%97%E5%85%AC%E5%9C%92/@33.96,132.10,16z'}:{ok:true,lat:33.95,lng:132.11},headers:{'access-control-allow-origin':'*'}});
+  const named=url.endsWith('/namedfixture');
+  await route.fulfill({json:named?{ok:true,lat:33.96,lng:132.10,finalUrl:'https://www.google.com/sorry/index?continue='+encodeURIComponent('https://www.google.com/maps/place/%E9%A7%85%E5%8D%97%E5%85%AC%E5%9C%92/@33.96,132.10,16z')}:{ok:true,lat:33.95,lng:132.11},headers:{'access-control-allow-origin':'*'}});
  });
  await page.locator('#detourCandidateLinkInput').fill('https://maps.app.goo.gl/namedfixture');await page.getByRole('button',{name:'URLから寄り道に追加'}).click();
  await expect(page.getByRole('textbox',{name:'寄り道地点名'}).first()).toHaveValue('駅南公園');
