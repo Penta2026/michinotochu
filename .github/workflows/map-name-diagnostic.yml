@@ -1,0 +1,29 @@
+name: Map name live diagnostic
+on:
+  push:
+    branches: [diagnostic-map-name]
+    paths: ['.github/workflows/map-name-diagnostic.yml']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Probe public park link and existing resolver
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.parse, json
+          short = 'https://maps.app.goo.gl/2s31xw48Gu15jepn6'
+          resolver = 'https://crimson-dust-53e2.yasutaka5262.workers.dev/?' + urllib.parse.urlencode({'url':short})
+          for label, url in [('resolver',resolver),('redirect',short)]:
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Accept-Language':'ja'})
+                  with urllib.request.urlopen(req,timeout=25) as r:
+                      print(label,'HTTP',r.status,'final URL',r.geturl())
+                      if label=='resolver':
+                          data=json.loads(r.read(65536))
+                          print('response:',json.dumps(data,ensure_ascii=False))
+              except Exception as e:
+                  print(label,'ERROR',repr(e))
+          PY
