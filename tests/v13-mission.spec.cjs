@@ -26,7 +26,7 @@ test('actual destination draw persists mission to current card and favorite; off
  await context.setOffline(true);await page.getByRole('button',{name:'旅カードを作る'}).click();await expect(page.locator('#tripCardSave')).toBeEnabled();
  const drawn=await page.evaluate(()=>{const canvas=document.createElement('canvas'),c=canvas.getContext('2d'),original=c.fillText.bind(c),texts=[];c.fillText=(s,...args)=>{texts.push(s);original(s,...args);};TripCard.draw(canvas,tripCardSnapshot());return texts;});
  expect(drawn.join('')).toContain(saved.destMission);await context.setOffline(false);
- await page.evaluate(()=>{closeModal();showView('dest');});await page.locator('#dest [data-mission="off"]').click();await page.locator('#dest .action-main').click();await expect(page.locator('#destResult .spot-card')).toBeVisible({timeout:60000});expect(await page.evaluate(()=>tripCardSnapshot().destMission)).toBe('ミッションなし');
+ await page.evaluate(()=>{closeModal();showView('dest');setOrigin('dest',34.3992388,132.4406034,'広島試験');document.getElementById('destDistFree').value='80';document.getElementById('destTolFree').value='10';});await page.locator('#dest [data-mission="off"]').click();await page.locator('#dest .action-main').click();await expect(page.locator('#destResult .spot-card')).toBeVisible({timeout:60000});expect(await page.evaluate(()=>tripCardSnapshot().destMission)).toBe('ミッションなし');
 });
 test('one station mission remains identical at every stop including goal',async({page})=>{
  await page.goto('http://127.0.0.1:8765/');await page.waitForFunction(()=>window.TripCard?.build==='13'&&!document.body.classList.contains('pwa-starting'));
