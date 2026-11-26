@@ -4,7 +4,7 @@ const VERSION = "13";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
-  "./index.html", "./style.css?v="+VERSION, "./app.js?v="+VERSION, "./detour-enhancements.js",
+  "./index.html", "./style.css?v="+VERSION, "./app.js?v="+VERSION, "./detour-enhancements.js?v="+VERSION,
   "./pwa.js?v="+VERSION, "./trip-card.js?v="+VERSION, "./gpx-export.js", "./sugoroku-route.js", "./land-lookup.js", "./land-distance.js?v="+VERSION, "./budget-sugoroku.js", "./sugoroku-land-ui.js?v="+VERSION, "./distance-gacha.js", "./draw-reveal.js", "./draw-reveal.css", "./data/land-runtime/manifest.json", "./data/land-runtime/spots.json", "./data/land-runtime/connections.json", "./manifest.webmanifest",
   "./data/app_data.js", "./data/riders_cafes.js", "./data/spot_overrides.js",
   "./data/road_summaries_chugoku.js", "./data/road_summaries_shikoku.js",
@@ -28,8 +28,8 @@ self.addEventListener("install", event => {
     // 必須リソースが1つでも欠けた場合は古いSWを維持する。
     await cache.addAll(CORE_FILES.map(path => new Request(path, {cache: "reload"})));
     // Avoid activating a partially published release (HTML and JS must agree).
-    const [html,app,pwa,card,distance,loader]=await Promise.all(["./index.html","./app.js?v="+VERSION,"./pwa.js?v="+VERSION,"./trip-card.js?v="+VERSION,"./land-distance.js?v="+VERSION,"./sugoroku-land-ui.js?v="+VERSION].map(async path=>(await cache.match(path)).text()));
-    if(!html.includes('data-app-build="'+VERSION+'"')||!app.includes('window.MICHI_APP_BUILD="'+VERSION+'"')||!pwa.includes('PWA_APP_VERSION = "'+VERSION+'"')||!card.includes('const BUILD="'+VERSION+'"')||!distance.includes('const BUILD="'+VERSION+'"')||!loader.includes('factorForTarget(targetKm)'))throw Error("Release resources do not match");
+    const [html,app,pwa,card,distance,loader,detour]=await Promise.all(["./index.html","./app.js?v="+VERSION,"./pwa.js?v="+VERSION,"./trip-card.js?v="+VERSION,"./land-distance.js?v="+VERSION,"./sugoroku-land-ui.js?v="+VERSION,"./detour-enhancements.js?v="+VERSION].map(async path=>(await cache.match(path)).text()));
+    if(!html.includes('data-app-build="'+VERSION+'"')||!app.includes('window.MICHI_APP_BUILD="'+VERSION+'"')||!pwa.includes('PWA_APP_VERSION = "'+VERSION+'"')||!card.includes('const BUILD="'+VERSION+'"')||!distance.includes('const BUILD="'+VERSION+'"')||!loader.includes('factorForTarget(targetKm)')||!detour.includes('const DETOUR_IMPORT_BUILD = "'+VERSION+'"'))throw Error("Release resources do not match");
     await Promise.allSettled(OPTIONAL_FILES.map(path => cache.add(new Request(path, {cache: "reload"}))));
     await self.skipWaiting();
   })());
@@ -74,7 +74,7 @@ self.addEventListener("fetch", event => {
   }
   event.respondWith((async () => {
     const cache = await caches.open(CACHE_NAME);
-    const critical=/\/(app\.js|pwa\.js|style\.css|trip-card\.js|land-distance\.js|sugoroku-land-ui\.js)$/.test(url.pathname);
+    const critical=/\/(app\.js|pwa\.js|style\.css|trip-card\.js|land-distance\.js|sugoroku-land-ui\.js|detour-enhancements\.js)$/.test(url.pathname);
     // Never substitute a different release's critical script or stylesheet.
     const cached = await cache.match(request, {ignoreSearch: !critical});
     if (cached) return cached;

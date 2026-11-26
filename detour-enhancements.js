@@ -208,7 +208,7 @@ function runDetourGacha() {
           inputmode="url" autocomplete="off" placeholder="Googleマップ共有URLまたは緯度,経度">
         <button type="button" class="soft detour-copy-add" onclick="addCopiedDetourPoint()">🔗 URLから寄り道に追加</button>
         <div id="detourExternalList" class="detour-external-list"></div>
-        <p class="meta">Googleマップで見つけた場所の共有リンクを貼り付けて追加。Androidの共有機能にも対応。名称は追加後に編集できます。</p>
+        <p class="meta">Googleマップの共有リンクから地点名も取得します。名称が取れない場合は「Googleマップ追加地点」と表示され、追加後に編集できます。Androidの共有にも対応。</p>
       </div>
       ${registered}
       <div class="detour-route-final">
@@ -260,18 +260,39 @@ function toggleDetourRegisteredSelection(index, checked) {
 }
 
 // Google Maps共有URLは必ずしも名称を含まない。推測で店舗名を作らない。
+const DETOUR_IMPORT_BUILD = "13";
+function cleanDetourPlaceName(value) {
+  if (typeof value !== "string") return "";
+  const name = value.trim().replace(/\s+/g, " ");
+  if (!name || /https?:|^loc:|^geo:|^-?\d+(?:\.\d+)?\s*,\s*-?\d|^\d{3}-\d{4}|^(?:Google\s*(?:Maps?|マップ)|Googleマップ共有地点|Googleマップ追加地点|地図|共有|場所|Dropped pin|ピンをドロップ)(?:$|[：:\s])/i.test(name)) return "";
+  return Array.from(name).slice(0, 80).join("");
+}
 function detourNameFromMapUrl(value) {
-  const text = String(value || "");
-  const match = text.match(/https?:\/\/[^\s]+/);
-  if (!match) return "";
+  const link = firstUrl(value);
+  if (!link) return "";
   try {
-    const url = new URL(match[0]);
-    const fromPlace = url.pathname.match(/\/place\/([^/]+)/i);
-    let name = fromPlace ? decodeURIComponent(fromPlace[1]).replace(/\+/g, " ") : "";
-    if (!name) name = url.searchParams.get("query") || url.searchParams.get("q") || "";
-    if (/^-?\d+(?:\.\d+)?\s*,\s*-?\d/.test(name) || /^(loc:|https?:)/i.test(name)) return "";
-    return name.trim().slice(0, 80);
+    const url = new URL(link);
+    if (!/^((www|maps)\.)?google\.(com|co\.jp)$/.test(url.hostname)) return "";
+    const place = url.pathname.match(/\/maps\/place\/([^/]+)/i);
+    let name = place ? decodeURIComponent(place[1].replace(/\+/g, " ")) : "";
+    if (!name && (url.searchParams.has("query_place_id") || url.searchParams.has("place_id"))) name = url.searchParams.get("query") || url.searchParams.get("q") || "";
+    return cleanDetourPlaceName(name);
   } catch (_) { return ""; }
+}
+function detourNameFromSharedText(value) {
+  const text = String(value || "").trim();
+  if (!firstUrl(text)) return "";
+  const before = text.slice(0, text.search(/https?:\/\//i)).trim();
+  if (!before) return "";
+  return cleanDetourPlaceName(before.split(/\r?\n/)[0]);
+}
+function detourResolvedPlaceName(value, resolved, title = "") {
+  const r = resolved && resolved.ok ? resolved : {};
+  return detourNameFromMapUrl(value) ||
+    [r.resolvedUrl,r.finalUrl,r.url,r.location,r.href].map(detourNameFromMapUrl).find(Boolean) ||
+    [r.placeName,r.name].map(cleanDetourPlaceName).find(Boolean) ||
+    cleanDetourPlaceName(title) || detourNameFromSharedText(value) ||
+    cleanDetourPlaceName(r.title) || "";
 }
 function detourExternalAnchor(options) {
   const entries = detourAnchorEntries();
@@ -308,13 +329,14 @@ function addDetourExternalCoords(lat, lng, options = {}) {
 async function addCopiedDetourPoint() {
   const link = await mapLinkText("detourCandidateLinkInput");
   if (!link) { alert("Googleマップの共有URLか、緯度,経度を貼り付けてね。"); return; }
-  const coords = await resolveMapLink(link);
+  const metadata = {};
+  const coords = await resolveMapLink(link, metadata);
   if (!coords) {
     showMapResolveDebug();
     alert("地点を取得できませんでした。短縮URLが解決できない場合は、Googleマップの座標を貼り付けてね。");
     return;
   }
-  const name = detourNameFromMapUrl(link) || "Googleマップ追加地点";
+  const name = detourResolvedPlaceName(link, metadata.resolved) || "Googleマップ追加地点";
   if (addDetourExternalCoords(coords[0], coords[1], {
     anchorKey: detourMapSearchState?.mapBaseKey || $("detourAnchor")?.value,
     name
@@ -386,12 +408,12 @@ function detourInsertedMultiple(route, detours) {
 
 // 元コードの受信処理（receiveSharedMapTarget）からは緯度経度だけが渡るため、
 // 共有URLのtitle/textを呼出側で補助的に名前へ反映する（後から編集可能）。
-function detourSharePointName() {
+function detourSharePointName(resolved) {
   const url = new URL(location.href);
   const title = url.searchParams.get("title") || "";
   const text = url.searchParams.get("text") || "";
-  return detourNameFromMapUrl(text) || detourNameFromMapUrl(url.searchParams.get("url")) ||
-    (title && !/^https?:/i.test(title) ? title.trim().slice(0, 80) : "");
+  const link = url.searchParams.get("url") || "";
+  return detourNameFromMapUrl(link) || detourResolvedPlaceName(text+"\n"+link,resolved,title);
 }
 
 // 初期画面でも新しい選択肢を表示。
