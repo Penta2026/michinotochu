@@ -1,5 +1,5 @@
 // Riders Cafe DB - Production
-// Public records only. Partner shops can use custom icons after image assets are added.
+// Publication is controlled by publish; keep suspended records for restoration. Partner shops can use custom icons after image assets are added.
 window.RIDERS_CAFES = [
   {
     id: "RC-34-001",
@@ -39,8 +39,8 @@ window.RIDERS_CAFES = [
     parkingRoof: "",
     helmetPlace: "",
     riderFacilities: [],
-    gacha: "候補",
-    publish: true,
+    gacha: "除外",
+    publish: false,
     testOnly: false,
     listingType: "partner",
     permission: {
@@ -57,13 +57,13 @@ window.RIDERS_CAFES = [
     iconImage: "",
     iconApproved: true,
     summary: "広島市安佐北区白木町のライダーズカフェ。ハンバーガーやカレー、コーヒーなどを楽しめる。",
-    notes: "「道の途中。」ライダーズカフェ掲載協力店 第1号。"
+    notes: "「道の途中。」ライダーズカフェ掲載協力店 第1号。2026-11-26 管理者申告により閉店・掲載一時停止。再掲載は管理者確認後。"
   }
 ];
 
 window.RIDERS_CAFE_DB_META = {
   schemaVersion: "1.0",
-  dbVersion: "1.0.1",
-  updated: "2026-10-08",
+  dbVersion: "1.0.2",
+  updated: "2026-11-26",
   count: 1
 };

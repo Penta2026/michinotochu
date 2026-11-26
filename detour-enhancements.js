@@ -260,7 +260,7 @@ function toggleDetourRegisteredSelection(index, checked) {
 }
 
 // Google Maps共有URLは必ずしも名称を含まない。推測で店舗名を作らない。
-const DETOUR_IMPORT_BUILD = "13";
+const DETOUR_IMPORT_BUILD = "14";
 function cleanDetourPlaceName(value) {
   if (typeof value !== "string") return "";
   const name = value.trim().replace(/\s+/g, " ");
