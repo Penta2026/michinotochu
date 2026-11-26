@@ -1,7 +1,7 @@
 /* Travel card: entirely local Canvas artwork; no remote assets or trip upload. */
 (function(){
 "use strict";
-const BUILD="10";
+const BUILD="11";
 // A local, approved countryside illustration; all text is rendered by Canvas.
 const artwork=new Image();
 const ready=new Promise(resolve=>{artwork.onload=()=>resolve(true);artwork.onerror=()=>resolve(false);artwork.src="./assets/trip-card-detour.jpg";});
@@ -139,42 +139,33 @@ function infoPanel(c,data,x,y,w,h){
  path(c,[[0,979],[180,970],[390,985],[610,971],[860,982],[1024,968],[1024,1000],[0,1000]],"#d5e8a9");
  c.restore();
 }
-function draw(canvas,data,format){
- const tall=format!=="wide",w=tall?1080:1920,h=tall?1350:1080;
+function draw(canvas,data){
+ const w=1080,h=1350;
  canvas.width=w;canvas.height=h;const c=canvas.getContext("2d");if(!c)throw Error("Canvas unavailable");
  const key=theme(data.goal||{});
  c.fillStyle=cream;c.fillRect(0,0,w,h);
- if(tall){
-  if(artworkAvailable())c.drawImage(artwork,0,0,w,330);
-  else scenery(c,0,0,w,330,key);
-  rect(c,28,20,modeTitle(data)==="道の駅すごろく"?440:300,70,24,"#234c2eea");
-  txt(c,modeTitle(data),50,33,43,"#fff",700);
-  rect(c,10,318,1060,1022,32,cream,"#a9c184");
-  infoPanel(c,data,28,335,1024,1000);
- }else{
-  // Keep the previous landscape artwork for wide cards; share the new text fields.
-  scenery(c,0,0,800,h,key);
-  rect(c,30,35,740,112,20,"#fffaf0ed");
-  txt(c,modeTitle(data),55,56,62,forest,700);
-  infoPanel(c,data,825,22,1065,1036);
- }
+ if(artworkAvailable())c.drawImage(artwork,0,0,w,330);
+ else scenery(c,0,0,w,330,key);
+ rect(c,28,20,modeTitle(data)==="道の駅すごろく"?440:300,70,24,"#234c2eea");
+ txt(c,modeTitle(data),50,33,43,"#fff",700);
+ rect(c,10,318,1060,1022,32,cream,"#a9c184");
+ infoPanel(c,data,28,335,1024,1000);
  return canvas;
 }
 function open(data,modal){
- modal('<div class="trip-card-dialog"><h2>旅カード</h2><p class="meta">目的地と旅程を画像に。出発地点・日付は入りません。</p><div class="trip-card-formats"><button id="tripCardTall" type="button" aria-pressed="true">縦長・SNS</button><button id="tripCardWide" type="button" aria-pressed="false">横長・動画</button></div><canvas id="tripCardCanvas" aria-label="旅カードのプレビュー"></canvas><p id="tripCardStatus" role="status"></p><div class="trip-card-actions"><button id="tripCardSave" type="button" disabled>PNG保存</button><button id="tripCardShare" type="button" disabled>共有する</button></div></div>');
- const el=id=>document.getElementById(id),canvas=el("tripCardCanvas"),save=el("tripCardSave"),share=el("tripCardShare"),status=el("tripCardStatus");let format="tall",blob=null,seq=0;
- function filename(){return modeTitle(data)+"_"+String(data.goal.name||"旅").replace(/[\\/:*?"<>|]/g,"_").slice(0,60)+"_"+(format==="wide"?"1920x1080":"1080x1350")+".png";}
+ modal('<div class="trip-card-dialog"><h2>旅カード</h2><p class="meta">目的地と旅程を画像に。出発地点・日付は入りません。</p><canvas id="tripCardCanvas" aria-label="旅カードのプレビュー"></canvas><p id="tripCardStatus" role="status"></p><div class="trip-card-actions"><button id="tripCardSave" type="button" disabled>PNG保存</button><button id="tripCardShare" type="button" disabled>共有する</button></div></div>');
+ const el=id=>document.getElementById(id),canvas=el("tripCardCanvas"),save=el("tripCardSave"),share=el("tripCardShare"),status=el("tripCardStatus");let blob=null,seq=0;
+ function filename(){return modeTitle(data)+"_"+String(data.goal.name||"旅").replace(/[\\/:*?"<>|]/g,"_").slice(0,60)+"_1080x1350.png";}
  function file(){return new File([blob],filename(),{type:"image/png"});}
  function canShare(){try{return !!(navigator.share&&navigator.canShare&&navigator.canShare({files:[file()]}));}catch(_){return false;}}
- async function refresh(f){
-  format=f;const ticket=++seq;blob=null;save.disabled=share.disabled=true;el("tripCardTall").setAttribute("aria-pressed",String(f==="tall"));el("tripCardWide").setAttribute("aria-pressed",String(f==="wide"));
+ async function refresh(){
+  const ticket=++seq;blob=null;save.disabled=share.disabled=true;
   status.textContent="画像を生成中…";
-  try{const loaded=f==="tall"?await ready:true;if(ticket!==seq||!canvas.isConnected)return;draw(canvas,data,f);canvas.toBlob(b=>{if(ticket!==seq||!canvas.isConnected)return;if(!b){status.textContent="画像を作成できませんでした。";return;}blob=b;save.disabled=false;share.disabled=!canShare();status.textContent=canvas.width+" × "+canvas.height+" px"+(!loaded?" ／ 背景画像未読込・簡易表示":"")+(share.disabled?" ／ 画像保存からSNSに投稿できます":"");},"image/png");}catch(e){status.textContent="画像を作成できませんでした："+e.message;}
+  try{const loaded=await ready;if(ticket!==seq||!canvas.isConnected)return;draw(canvas,data);canvas.toBlob(b=>{if(ticket!==seq||!canvas.isConnected)return;if(!b){status.textContent="画像を作成できませんでした。";return;}blob=b;save.disabled=false;share.disabled=!canShare();status.textContent=canvas.width+" × "+canvas.height+" px"+(!loaded?" ／ 背景画像未読込・簡易表示":"")+(share.disabled?" ／ 画像保存からSNSに投稿できます":"");},"image/png");}catch(e){status.textContent="画像を作成できませんでした："+e.message;}
  }
- el("tripCardTall").onclick=()=>refresh("tall");el("tripCardWide").onclick=()=>refresh("wide");
  save.onclick=()=>{if(!blob)return;const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename();document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);};
  share.onclick=async()=>{if(!blob||!canShare())return;try{await navigator.share({files:[file()],title:modeTitle(data)});}catch(e){if(e.name!=="AbortError")status.textContent="共有できませんでした。PNG保存をご利用ください。";}};
- refresh("tall");
+ refresh();
 }
 window.TripCard=Object.freeze({build:BUILD,draw,open,theme,ready,artworkAvailable,viaLayout,modeTitle});
 })();
