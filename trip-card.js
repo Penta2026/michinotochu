@@ -1,7 +1,7 @@
 /* Travel card: entirely local Canvas artwork; no remote assets or trip upload. */
 (function(){
 "use strict";
-const BUILD="12";
+const BUILD="13";
 // A local, approved countryside illustration; all text is rendered by Canvas.
 const artwork=new Image();
 const ready=new Promise(resolve=>{artwork.onload=()=>resolve(true);artwork.onerror=()=>resolve(false);artwork.src="./assets/trip-card-detour.jpg";});
@@ -119,10 +119,11 @@ function infoPanel(c,data,x,y,w,h){
  box(104,78);label("address","住所",120);
  block(c,g.address||"住所未登録",220,115,775,2,25,18,500,forest);
  box(192,244);label("desc","説明",204);
- const showMission=data.mode==="sug";
- const station=typeof data.stationMission==="string"&&data.stationMission.trim()?data.stationMission:"未保存（Ver9以前の旅）";
+ const value=data.mode==="sug"?data.stationMission:data.destMission;
+ const showMission=data.mode==="sug"||data.mode==="dest";
+ const station=typeof value==="string"&&value.trim()?value:"未保存（以前の旅）";
  block(c,g.summary||"説明未登録",24,252,976,showMission?3:5,28,21,400,forest);
- if(showMission){rect(c,15,367,994,57,16,pale);block(c,"ミッション："+station,28,373,968,2,21,18,700,forest);}
+ if(showMission){rect(c,15,367,994,57,16,pale);block(c,(data.mode==="sug"&&station!=="ミッションなし"&&value?"全駅共通ミッション：":"ミッション：")+station,28,373,968,2,21,18,700,forest);}
  box(446,275);label("via","経由地",458);
  const route=viaLayout(c,data.via,960);
  if(route.shortened)txt(c,"一部省略・全"+route.count+"件",690,469,20,muted,500);
