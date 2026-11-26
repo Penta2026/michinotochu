@@ -1,0 +1,48 @@
+name: Ver12 distance and card gate
+on:
+  workflow_dispatch:
+  push:
+    branches: [distance-v12]
+    paths:
+      - 'assets/trip-card-detour.jpg'
+      - 'trip-card.js'
+      - 'app.js'
+      - 'service-worker.js'
+      - 'index.html'
+      - 'pwa.js'
+      - 'style.css'
+      - 'land-distance.js'
+      - 'sugoroku-land-ui.js'
+      - 'tests/v12-distance.test.cjs'
+      - 'tests/v12-distance-browser.spec.cjs'
+      - 'tests/v12-trip-card.spec.cjs'
+      - '.github/workflows/v12-trip-card.yml'
+permissions:
+  contents: read
+jobs:
+  card:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    # Verify calibrated distance and portrait-only output before promotion.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: test -s assets/trip-card-detour.jpg
+      - run: node --check app.js && node --check trip-card.js && node --check pwa.js && node --check service-worker.js
+      - run: node --check land-distance.js && node --check sugoroku-land-ui.js && node tests/v12-distance.test.cjs
+      - run: npm install --no-save @playwright/test@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/michi-current.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - run: npx playwright test tests/v12-trip-card.spec.cjs tests/v12-distance-browser.spec.cjs tests/stage75-browser.spec.cjs tests/stage81-destination.spec.cjs tests/stage82-ride.spec.cjs tests/stage83-season.spec.cjs --workers=1 --timeout=120000 --reporter=list,html --trace=retain-on-failure
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v12-release-report
+          path: |
+            playwright-report/
+            test-results/

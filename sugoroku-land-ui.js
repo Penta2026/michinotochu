@@ -22,7 +22,7 @@ async function loadBase(){if(!basePromise)basePromise=Promise.all([json("manifes
  for(const c of connections)for(const p of [c.a,c.b])add(p.lat,p.lng,p.landId);
  return {manifest,known,connections};
  }).catch(e=>{basePromise=null;throw e;});return basePromise;}
-state.prepare=async function(origin,extraPoints=[]){
+state.prepare=async function(origin,extraPoints=[],targetKm=null){
  const b=await loadBase();const key=Math.floor(origin.lng)+"_"+Math.floor(origin.lat);
  if(!b.manifest.tiles.includes(key))throw Error("出発地点の陸地データがありません");
  if(!state.tiles.has(key)){state.tiles.set(key,json(key+".json").then(root.LandLookup.create).catch(e=>{state.tiles.delete(key);throw e;}));}
@@ -37,6 +37,6 @@ state.prepare=async function(origin,extraPoints=[]){
  const tile=loaded.get(Math.floor(lng)+"_"+Math.floor(lat));if(tile)return tile.classify(lat,lng);
  return {status:"unclassified",landId:null};
  }};
- return root.LandDistance.create({lookup,connections:b.connections});
+ return root.LandDistance.create({lookup,connections:b.connections,factor:root.LandDistance.factorForTarget(targetKm)});
 };
 })(window);

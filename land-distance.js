@@ -3,7 +3,19 @@
 const rad=Math.PI/180;
 function km(a,b){const x=Math.sin((b.lat-a.lat)*rad/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin((b.lng-a.lng)*rad/2)**2;return 12742*Math.asin(Math.sqrt(Math.min(1,x)));}
 const valid=p=>p&&Number.isFinite(p.lat)&&Number.isFinite(p.lng)&&Math.abs(p.lat)<=90&&Math.abs(p.lng)<=180;
+const BUILD="12";
 const vehicles=["50","125","126"];
+// The selected trip budget/target, not each individual leg, sets the land factor.
+// Keep short trips unchanged; interpolate between agreed calibration points.
+const factorPoints=[[50,1.45],[100,1.50],[200,1.60],[300,1.70],[500,1.85],[750,1.90],[1000,2.00]];
+function factorForTarget(targetKm){
+ if(!Number.isFinite(targetKm)||targetKm<=50)return 1.45;
+ for(let i=1;i<factorPoints.length;i++){
+  const [hi,hf]=factorPoints[i],[lo,lf]=factorPoints[i-1];
+  if(targetKm<=hi)return lf+(hf-lf)*(targetKm-lo)/(hi-lo);
+ }
+ return 2;
+}
 function create({lookup,connections,sidecar=null,factor=1.45}){
  if(!lookup?.classify||!Array.isArray(connections)||!Number.isFinite(factor)||factor<1)throw Error("Invalid distance configuration");
  const nodes=[],edges=[],ids=new Set();
@@ -34,5 +46,5 @@ function create({lookup,connections,sidecar=null,factor=1.45}){
  function itinerary(origin,points,opts){let total=0,previous=origin;const sections=[];for(const point of points){const s=estimate(previous,point,opts);if(!s)return null;total+=s.km;sections.push(s);previous=point;}return {km:total,sections};}
  return Object.freeze({estimate,itinerary,land});
 }
-const api={create,km};if(typeof module==="object"&&module.exports)module.exports=api;else root.LandDistance=api;
+const api={build:BUILD,create,km,factorForTarget};if(typeof module==="object"&&module.exports)module.exports=api;else root.LandDistance=api;
 })(typeof globalThis!=="undefined"?globalThis:this);
