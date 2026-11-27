@@ -41,12 +41,14 @@ function pwaWorkerVersion(worker){
   });
 }
 async function pwaPublishedVersion(){
+  if(navigator.onLine===false)throw Error("offline");
   const url=new URL("./data/version.json",location.href);url.searchParams.set("check",String(Date.now()));
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),12000);
   try{
     const response=await fetch(url,{cache:"no-store",signal:controller.signal});
     if(!response.ok)throw Error("version HTTP "+response.status);
     const data=await response.json();
+    if(navigator.onLine===false)throw Error("offline");
     if(!/^[0-9]+$/.test(String(data.appVersion||""))||!/^[0-9]+$/.test(String(data.dbVersion||"")))throw Error("invalid version");
     return {appVersion:String(data.appVersion),dbVersion:String(data.dbVersion)};
   }finally{clearTimeout(timer);}

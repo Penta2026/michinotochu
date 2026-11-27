@@ -247,14 +247,20 @@ async function runSugoroku(){
     if(window._sugRequest===request){console.error("すごろく抽選失敗",error);result.classList.remove("empty");result.textContent="抽選処理に失敗しました："+String(error?.message||error);}
   }finally{if(window._sugRequest===request&&status)status.textContent="";}
 }
-function resetResult(e){if(e==="season"){window._seasonRequest=(window._seasonRequest||0)+1;const status=$("seasonLandStatus");if(status)status.textContent="";}if(e==="ride"){window._rideRequest=(window._rideRequest||0)+1;const status=$("rideLandStatus");if(status)status.textContent="";}if(e==="dest"){window._destRequest=(window._destRequest||0)+1;const status=$("destLandStatus");if(status)status.textContent="";}if(e==="sug"){window._sugRequest=(window._sugRequest||0)+1;const status=$("sugLandStatus");if(status)status.textContent="";}$(e+"Result").classList.add("empty"),$(e+"Result").innerHTML="条件を設定してください。"}async function runDestination(){
+function resetResult(e){if(e==="season"){window._seasonRequest=(window._seasonRequest||0)+1;const status=$("seasonLandStatus");if(status)status.textContent="";}if(e==="ride"){window._rideRequest=(window._rideRequest||0)+1;const status=$("rideLandStatus");if(status)status.textContent="";}if(e==="dest"){window._destRequest=(window._destRequest||0)+1;const status=$("destLandStatus");if(status)status.textContent="";}if(e==="sug"){window._sugRequest=(window._sugRequest||0)+1;const status=$("sugLandStatus");if(status)status.textContent="";}$(e+"Result").classList.add("empty"),$(e+"Result").innerHTML="条件を設定してください。"}function destinationDistanceChoice(random=Math.random){
+ const free=String($("destDistFree").value).trim(),value=Number(free);
+ if(free&&Number.isFinite(value)&&value>=1&&value<=2000)return {km:value,random:false};
+ if($("destDist").value==="random")return {km:20+Math.min(180,Math.floor(random()*181)),random:true};
+ return {km:numericValue("destDist","destDistFree",1,2e3),random:false};
+}
+async function runDestination(){
  const request=(window._destRequest||0)+1;window._destRequest=request;
  const e=requireOrigin("dest");if(!e){$("destResult").classList.remove("empty");$("destResult").textContent="スタート地点を設定してください。";return;}
  const status=$("destLandStatus"),result=$("destResult");
  result.classList.remove("empty");result.textContent="候補を確認中…";
  try{
- const t=numericValue("destDist","destDistFree",1,2e3),n=numericValue("destTol","destTolFree",1,500),r=$("destMood").value,vehicle=$("destVehicle").value;
- const fail=message=>{result.classList.remove("empty");result.innerHTML="<p>"+esc(message)+"</p>";};
+ const choice=destinationDistanceChoice(),t=choice.km,n=numericValue("destTol","destTolFree",1,500),r=$("destMood").value,vehicle=$("destVehicle").value;
+ const fail=message=>{result.classList.remove("empty");result.innerHTML=(choice.random?`<div class="meta"><b>🎲 距離ガチャ：${t}km</b>（±${n}km）</div>`:"")+"<p>"+esc(message)+"</p>";};
  const raw=[...D.roads.filter(p=>active(p.gacha)).map(p=>({...p,kind:"道の駅"})),...D.landmarks.filter(p=>active(p.gacha)).map(p=>({...p,kind:pointKind(p)})),...RIDERS_CAFES.filter(p=>active(p.gacha)&&(!1!==p.publish||p.testOnly)).map(p=>({...p,kind:"ライダーズカフェ"}))];
  const candidates=raw.filter(p=>p.lat!=null&&p.lng!=null&&String(p.lat).trim()!==""&&String(p.lng).trim()!=="").map(p=>({...p,lat:Number(p.lat),lng:Number(p.lng)})).filter(p=>Number.isFinite(p.lat)&&Number.isFinite(p.lng)&&window.LandDistance.km(e,p)<=t+n);
  if(status)status.textContent="陸地データを確認中…";
@@ -279,7 +285,7 @@ function resetResult(e){if(e==="season"){window._seasonRequest=(window._seasonRe
  await playDrawSafely(result,"gacha");
  if(window._destRequest!==request)return;
  result.classList.remove("empty");
- result.innerHTML=`<div class="meta"><b>推定走行距離：約${a.d.toFixed(1)}km</b> / 指定 ${t}km ±${n}km</div>${navigationMissionCard(navigationMission)}${travelMissionCard(mission)}${spotCard(a,a.kind,null,!1,null,0,e,null,!0)}<div class="note">※ 推定値です。実際の道路距離はB_Naviで確認してください。</div><div class="actions"><button class="soft" onclick='saveFavorite(${JSON.stringify({mode:"行先ガチャ",title:a.name,navigationMission,travelMission:mission,startLabel:e.label,origin:e,points:[{name:a.name,lat:a.lat,lng:a.lng,latRaw:a.latRaw||String(a.lat),lngRaw:a.lngRaw||String(a.lng),kind:a.kind,prefecture:a.prefecture,featureCategory:a.featureCategory,navMode:useNameNavigation(a)?"name":"coord",navQuery:useNameNavigation(a)?navSearchQuery(a):""}],routeSummary:""}).replaceAll("'","&#39;")})'>お気に入りに保存</button></div>`;
+ result.innerHTML=`<div class="meta"><b>推定走行距離：約${a.d.toFixed(1)}km</b> / ${choice.random?"🎲 距離ガチャ":"指定"} ${t}km ±${n}km</div>${navigationMissionCard(navigationMission)}${travelMissionCard(mission)}${spotCard(a,a.kind,null,!1,null,0,e,null,!0)}<div class="note">※ 推定値です。実際の道路距離はB_Naviで確認してください。</div><div class="actions"><button class="soft" onclick='saveFavorite(${JSON.stringify({mode:"行先ガチャ",title:a.name,navigationMission,travelMission:mission,startLabel:e.label,origin:e,points:[{name:a.name,lat:a.lat,lng:a.lng,latRaw:a.latRaw||String(a.lat),lngRaw:a.lngRaw||String(a.lng),kind:a.kind,prefecture:a.prefecture,featureCategory:a.featureCategory,navMode:useNameNavigation(a)?"name":"coord",navQuery:useNameNavigation(a)?navSearchQuery(a):""}],routeSummary:""}).replaceAll("'","&#39;")})'>お気に入りに保存</button></div>`;
  setCurrentDestination("dest",[a],navigationMission,a.d,mission);
  }catch(error){if(window._destRequest===request){console.error("行先ガチャ抽選失敗",error);result.classList.remove("empty");result.textContent="抽選処理に失敗しました："+String(error?.message||error);}}
  finally{if(window._destRequest===request&&status)status.textContent="";}

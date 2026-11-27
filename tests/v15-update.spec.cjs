@@ -2,10 +2,11 @@ const {test,expect}=require('@playwright/test');
 const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..');
 test('real service worker update button confirms current, installs next, preserves data, handles failed publish/offline',async({page,context})=>{
- let served='15',published='15';
+ let served='15',published='15',versionUnavailable=false;
  const contentTypes={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.webmanifest':'application/manifest+json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp'};
  const server=http.createServer((req,res)=>{
   const u=new URL(req.url,'http://localhost'),rel=u.pathname==='/'?'index.html':u.pathname.slice(1);
+  if(rel==='data/version.json'&&versionUnavailable){res.writeHead(503);res.end();return;}
   if(rel==='data/version.json'){res.writeHead(200,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify({appVersion:published,dbVersion:'2'}));return;}
   const file=path.resolve(root,rel);
   if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){res.writeHead(404);res.end();return;}
@@ -31,7 +32,7 @@ test('real service worker update button confirms current, installs next, preserv
   expect(await page.evaluate(()=>localStorage.getItem('update-preserve-test'))).toBe('keep');
   expect(await page.evaluate(()=>tripCardSnapshot())).toEqual(snapshot);
   await button.click();await expect(status).toContainText('最新版です（PWA 16 / DB 2）',{timeout:20000});
-  await context.setOffline(true);await button.click();await expect(status).toContainText('更新未確認',{timeout:20000});
+  versionUnavailable=true;await context.setOffline(true);await button.click();await expect(status).toContainText('更新未確認',{timeout:20000});
   expect(await page.evaluate(()=>window.MICHI_APP_BUILD)).toBe('16');await page.reload();await page.waitForFunction(()=>window.MICHI_APP_BUILD==='16');
   expect(await page.evaluate(()=>tripCardSnapshot())).toEqual(snapshot);
  }finally{await context.setOffline(false);await new Promise(resolve=>server.close(resolve));}

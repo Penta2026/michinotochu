@@ -10,6 +10,7 @@ on:
       - 'data/riders_cafes.js'
       - 'tests/v15-cafe.spec.cjs'
       - 'tests/v15-update.spec.cjs'
+      - 'tests/v15-random-distance.spec.cjs'
       - 'service-worker.js'
       - 'index.html'
       - 'pwa.js'
@@ -44,7 +45,7 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/michi-current.log 2>&1 &
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && exit 0; sleep 1; done
           exit 1
-      - run: npx playwright test tests/v15-update.spec.cjs tests/v15-cafe.spec.cjs tests/v15-detour-name.spec.cjs tests/v15-mission.spec.cjs tests/v15-trip-card.spec.cjs tests/v15-distance-browser.spec.cjs tests/stage75-browser.spec.cjs tests/stage81-destination.spec.cjs tests/stage82-ride.spec.cjs tests/stage83-season.spec.cjs --workers=1 --timeout=240000 --reporter=list,html --trace=retain-on-failure
+      - run: npx playwright test tests/v15-random-distance.spec.cjs tests/v15-update.spec.cjs tests/v15-cafe.spec.cjs tests/v15-detour-name.spec.cjs tests/v15-mission.spec.cjs tests/v15-trip-card.spec.cjs tests/v15-distance-browser.spec.cjs tests/stage75-browser.spec.cjs tests/stage81-destination.spec.cjs tests/stage82-ride.spec.cjs tests/stage83-season.spec.cjs --workers=1 --timeout=240000 --reporter=list,html --trace=retain-on-failure
       - uses: actions/upload-artifact@v4
         if: always()
         with:
