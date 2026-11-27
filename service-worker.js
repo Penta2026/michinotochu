@@ -1,6 +1,6 @@
-/* 道の途中。PWAキャッシュ (14) - 独立スコープ、他アプリのキャッシュは削除しない。 */
+/* 道の途中。PWAキャッシュ (15) - 独立スコープ、他アプリのキャッシュは削除しない。 */
 "use strict";
-const VERSION = "14";
+const VERSION = "15";
 const CACHE_PREFIX = "michinotochu-rebuilt-pwa-";
 const CACHE_NAME = CACHE_PREFIX + VERSION;
 const CORE_FILES = [
@@ -43,6 +43,7 @@ self.addEventListener("activate", event => {
 });
 self.addEventListener("message", event => {
   if (event.data && event.data.type === "SKIP_WAITING") self.skipWaiting();
+  if(event.data?.type==="MICHI_GET_VERSION"&&event.ports?.[0])event.ports[0].postMessage({type:"MICHI_VERSION",version:VERSION});
 });
 self.addEventListener("fetch", event => {
   const request = event.request;
@@ -50,7 +51,7 @@ self.addEventListener("fetch", event => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL(self.registration.scope).pathname)) return;
   if (url.pathname.endsWith("/data/version.json")) {
-    event.respondWith(fetch(request, {cache: "no-store"}).catch(() => caches.open(CACHE_NAME).then(c => c.match(request))));
+    event.respondWith(fetch(request, {cache: "no-store"}));
     return;
   }
   if (request.mode === "navigate") {

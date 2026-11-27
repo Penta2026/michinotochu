@@ -1,0 +1,54 @@
+name: Ver15 application update gate
+on:
+  workflow_dispatch:
+  push:
+    branches: [update-v15]
+    paths:
+      - 'assets/trip-card-detour.jpg'
+      - 'trip-card.js'
+      - 'app.js'
+      - 'data/riders_cafes.js'
+      - 'tests/v15-cafe.spec.cjs'
+      - 'tests/v15-update.spec.cjs'
+      - 'service-worker.js'
+      - 'index.html'
+      - 'pwa.js'
+      - 'style.css'
+      - 'land-distance.js'
+      - 'sugoroku-land-ui.js'
+      - 'tests/v12-distance.test.cjs'
+      - 'tests/v15-distance-browser.spec.cjs'
+      - 'tests/v15-trip-card.spec.cjs'
+      - 'tests/v15-mission.spec.cjs'
+      - 'detour-enhancements.js'
+      - 'tests/v15-detour-name.spec.cjs'
+      - '.github/workflows/v15-trip-card.yml'
+permissions:
+  contents: read
+jobs:
+  card:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    # Verify suspended cafe visibility and existing features before promotion.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: test -s assets/trip-card-detour.jpg
+      - run: node --check data/riders_cafes.js && node --check app.js && node --check trip-card.js && node --check pwa.js && node --check service-worker.js
+      - run: node --check land-distance.js && node --check sugoroku-land-ui.js && node tests/v12-distance.test.cjs
+      - run: npm install --no-save @playwright/test@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/michi-current.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && exit 0; sleep 1; done
+          exit 1
+      - run: npx playwright test tests/v15-update.spec.cjs tests/v15-cafe.spec.cjs tests/v15-detour-name.spec.cjs tests/v15-mission.spec.cjs tests/v15-trip-card.spec.cjs tests/v15-distance-browser.spec.cjs tests/stage75-browser.spec.cjs tests/stage81-destination.spec.cjs tests/stage82-ride.spec.cjs tests/stage83-season.spec.cjs --workers=1 --timeout=240000 --reporter=list,html --trace=retain-on-failure
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v15-release-report
+          path: |
+            playwright-report/
+            test-results/
