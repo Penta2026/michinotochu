@@ -33,7 +33,7 @@ jobs:
   card:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
-    # Verify random target distance, live version switching and existing features before promotion.
+    # Verify unchanged cache reuse, changed image refresh, live version switching and existing features.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
