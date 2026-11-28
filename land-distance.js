@@ -3,7 +3,7 @@
 const rad=Math.PI/180;
 function km(a,b){const x=Math.sin((b.lat-a.lat)*rad/2)**2+Math.cos(a.lat*rad)*Math.cos(b.lat*rad)*Math.sin((b.lng-a.lng)*rad/2)**2;return 12742*Math.asin(Math.sqrt(Math.min(1,x)));}
 const valid=p=>p&&Number.isFinite(p.lat)&&Number.isFinite(p.lng)&&Math.abs(p.lat)<=90&&Math.abs(p.lng)<=180;
-const BUILD="15";
+const BUILD="16";
 const vehicles=["50","125","126"];
 // The selected trip budget/target, not each individual leg, sets the land factor.
 // Keep short trips unchanged; interpolate between agreed calibration points.

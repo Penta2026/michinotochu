@@ -1,7 +1,7 @@
 /* Travel card: entirely local Canvas artwork; no remote assets or trip upload. */
 (function(){
 "use strict";
-const BUILD="15";
+const BUILD="16";
 // A local, approved countryside illustration; all text is rendered by Canvas.
 const artwork=new Image();
 const ready=new Promise(resolve=>{artwork.onload=()=>resolve(true);artwork.onerror=()=>resolve(false);artwork.src="./assets/trip-card-detour.jpg";});
